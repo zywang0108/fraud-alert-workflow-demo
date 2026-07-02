@@ -1341,35 +1341,35 @@
         <div class="node-body is-three">
           <section class="panel">
             <div class="panel-title">
-              <span>SFT 训练什么</span>
+              <span>SFT: 从历史案件学习标准调查轨迹</span>
               <span class="tag">模仿好轨迹</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
-                  <b>脱敏上下文作为输入</b>
+                  <b>学习输入组织</b>
                   <span>使用经过权限过滤和脱敏处理的告警摘要、风险类型、Top N features、可用工具列表、表结构摘要和政策引用，不直接训练原始客户明细。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
-                  <b>学习工具选择轨迹</b>
+                  <b>学习工具选择</b>
                   <span>模型学习不同风险信号下该调用哪个工具，例如交易查询、KYC 查询、设备查询、Graph 查询、policy RAG 或历史案件检索。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
-                  <b>学习工具参数构造</b>
+                  <b>学习参数构造</b>
                   <span>模型学习如何根据告警上下文填写 account_id、window_start、window_end、feature_id、query_template_id、tables、columns 和 threshold。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
-                  <b>学习证据解释</b>
+                  <b>学习证据构造</b>
                   <span>工具返回结果后，模型学习生成 summary、details、rows_sample、data_lineage、tool_trace_ref 和缺失证据说明。</span>
                 </div>
               </div>
@@ -1476,7 +1476,7 @@
           </div>
           <div class="note">
             <b>训练价值</b>
-            <span>SFT 学会怎么走，RLVR 训练走得对不对，RLHF 训练是否符合资深复核人的审计偏好。</span>
+            <span>让模型模仿资深调查员从 alert 到 tool calls、evidence cards、draft report 的完整标准轨迹，再用 RLVR 验证走得对不对，用 RLHF 对齐审计偏好。</span>
           </div>
         </div>`
       },
