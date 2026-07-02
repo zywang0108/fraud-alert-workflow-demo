@@ -1,0 +1,1901 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>传统告警审计工作流</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07110f;
+      --surface: #101c18;
+      --surface-2: #13241f;
+      --surface-3: #192c26;
+      --text: #edf8f2;
+      --muted: #9ab2a7;
+      --line: rgba(180, 225, 203, 0.18);
+      --line-strong: rgba(180, 225, 203, 0.34);
+      --green: #a8ffb6;
+      --cyan: #5ee8d4;
+      --amber: #ffc96f;
+      --red: #ff6d6d;
+      --steel: #7c9bff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(94, 232, 212, 0.18), transparent 30%),
+        radial-gradient(circle at 84% 82%, rgba(124, 155, 255, 0.16), transparent 34%),
+        linear-gradient(135deg, #07100e 0%, #0c1814 46%, #10120f 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(180, 255, 216, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 255, 216, 0.07) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 88%);
+    }
+
+    .stage {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 100vh;
+      gap: 12px;
+      padding: 24px clamp(22px, 5vw, 70px) 18px;
+      isolation: isolate;
+    }
+
+    .stage > * {
+      min-width: 0;
+    }
+
+    .topbar,
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      position: relative;
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(94, 232, 212, 0.42);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(94, 232, 212, 0.24), rgba(168, 255, 182, 0.08)), #0c1815;
+      box-shadow: 0 0 32px rgba(94, 232, 212, 0.16);
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(237, 248, 241, 0.72);
+      border-radius: 4px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .pill,
+    .control {
+      border: 1px solid rgba(155, 179, 167, 0.24);
+      border-radius: 999px;
+      background: rgba(8, 17, 15, 0.48);
+      backdrop-filter: blur(18px);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .pill {
+      padding: 8px 12px;
+    }
+
+    .control {
+      height: 36px;
+      padding: 0 14px;
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .control:hover {
+      border-color: rgba(168, 255, 182, 0.66);
+      background: rgba(94, 232, 212, 0.12);
+    }
+
+    .control:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .control:disabled {
+      cursor: default;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .archive {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      min-height: 58px;
+      border: 1px dashed rgba(180, 225, 203, 0.22);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: rgba(8, 17, 15, 0.34);
+    }
+
+    .archive-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .archive-slot {
+      position: relative;
+      min-width: 0;
+      min-height: 38px;
+      border-left: 1px solid rgba(180, 225, 203, 0.15);
+      padding-left: 14px;
+      color: rgba(237, 248, 242, 0.6);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      overflow: visible;
+    }
+
+    .archive-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      max-width: 100%;
+      border: 1px solid rgba(94, 232, 212, 0.32);
+      border-radius: 8px;
+      padding: 8px 11px;
+      background: rgba(19, 36, 31, 0.9);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+      transform: none;
+      opacity: 1;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
+      white-space: nowrap;
+    }
+
+    .archive-card:hover {
+      border-color: rgba(168, 255, 182, 0.7);
+      background: rgba(23, 48, 41, 0.96);
+    }
+
+    .archive-card:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .archive-card b {
+      color: var(--green);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .archive-card span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .archive-card.is-current {
+      border-color: rgba(255, 201, 111, 0.44);
+      background: rgba(255, 201, 111, 0.12);
+      color: var(--amber);
+      box-shadow: 0 18px 50px rgba(255, 201, 111, 0.08);
+    }
+
+    .archive-card.is-current b {
+      color: var(--amber);
+    }
+
+    .canvas {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+    }
+
+    .orbit {
+      position: absolute;
+      width: min(78vw, 920px);
+      aspect-ratio: 1.9;
+      border: 1px solid rgba(94, 232, 212, 0.13);
+      border-radius: 50%;
+      transform: rotate(-6deg);
+      opacity: 0.8;
+    }
+
+    .orbit:nth-child(2) {
+      width: min(66vw, 760px);
+      transform: rotate(12deg);
+      border-color: rgba(168, 255, 182, 0.12);
+    }
+
+    .node {
+      position: relative;
+      width: min(92vw, 940px);
+      border: 1px solid rgba(168, 255, 182, 0.2);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(19, 35, 31, 0.96), rgba(11, 21, 18, 0.97)), var(--surface);
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.44),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .node.is-wide {
+      width: min(96vw, 1160px);
+    }
+
+    .node.is-wide .node-header {
+      padding: 20px 30px 16px;
+    }
+
+    .node.is-wide .panel {
+      padding: 14px;
+    }
+
+    .node::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-top: 3px solid var(--cyan);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .node.is-lifting {
+      animation: liftToArchive 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .node.is-entering {
+      animation: enterActive 560ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .node-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      padding: 24px 30px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .node-header > *,
+    .node-body > *,
+    .note-strip > * {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(168, 255, 182, 0.8);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 720px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(14px, 1.2vw, 16px);
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .meter {
+      min-width: 150px;
+      align-self: start;
+      border: 1px solid rgba(255, 201, 111, 0.28);
+      border-radius: 8px;
+      background: rgba(255, 201, 111, 0.08);
+      padding: 13px;
+      text-align: right;
+    }
+
+    .meter small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .meter strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--amber);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .node-body {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      padding: 18px 30px 22px;
+    }
+
+    .node-body.is-three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(8, 17, 15, 0.52);
+      padding: 16px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tag {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 9px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 10px;
+      border: 1px solid rgba(155, 179, 167, 0.16);
+      border-radius: 8px;
+      background: rgba(19, 36, 31, 0.68);
+    }
+
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(94, 232, 212, 0.12);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .step b,
+    .friction b {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .step span,
+    .friction span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+      overflow-wrap: anywhere;
+    }
+
+    .frictions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .friction {
+      position: relative;
+      padding: 10px 10px 10px 32px;
+      border-bottom: 1px solid rgba(155, 179, 167, 0.13);
+    }
+
+    .friction:last-child {
+      border-bottom: 0;
+    }
+
+    .friction::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 18px rgba(255, 109, 109, 0.36);
+    }
+
+    .note-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 0 30px 22px;
+    }
+
+    .note {
+      border: 1px solid rgba(180, 225, 203, 0.15);
+      border-radius: 8px;
+      background: rgba(19, 36, 31, 0.5);
+      padding: 12px;
+      min-height: 0;
+    }
+
+    .note b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .note span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+    }
+
+    .storage-tree {
+      margin: 0;
+      color: var(--muted);
+      font: 11px/1.42 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .evidence-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1.38fr) minmax(320px, 0.82fr);
+      gap: 14px;
+      padding: 16px 24px 12px;
+    }
+
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .agent-tile,
+    .schema-row,
+    .artifact-card {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.16);
+      border-radius: 8px;
+      background: rgba(19, 36, 31, 0.68);
+    }
+
+    .agent-tile {
+      display: grid;
+      gap: 8px;
+      padding: 11px;
+    }
+
+    .agent-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .agent-title {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .agent-claim {
+      margin: 0;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.38;
+    }
+
+    .agent-copy,
+    .agent-return span,
+    .schema-row span,
+    .artifact-card span {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.42;
+      overflow-wrap: anywhere;
+    }
+
+    .agent-return {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .agent-return b,
+    .schema-pill {
+      border: 1px solid rgba(94, 232, 212, 0.24);
+      border-radius: 999px;
+      background: rgba(94, 232, 212, 0.08);
+      color: var(--cyan);
+      padding: 3px 6px;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .result-line {
+      border-top: 1px solid rgba(155, 179, 167, 0.13);
+      padding-top: 7px;
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .schema-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .node.is-wide .schema-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .schema-row {
+      padding: 9px 10px;
+    }
+
+    .node.is-wide .schema-row {
+      padding: 8px;
+    }
+
+    .schema-row b,
+    .artifact-card b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .schema-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .evidence-storage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr) minmax(0, 0.85fr);
+      gap: 10px;
+      padding: 0 24px 18px;
+    }
+
+    .artifact-card {
+      padding: 11px;
+    }
+
+    .audit-lines {
+      display: grid;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .audit-line {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.36;
+    }
+
+    .audit-line i {
+      width: 8px;
+      height: 8px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(168, 255, 182, 0.34);
+    }
+
+    .footer {
+      border-top: 1px solid rgba(155, 179, 167, 0.16);
+      padding-top: 14px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .source-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .bar {
+      flex: 0 0 auto;
+      width: 88px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), var(--cyan), var(--steel));
+      opacity: 0.9;
+    }
+
+    @keyframes liftToArchive {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      65% {
+        transform: translateY(-92px) scale(0.88);
+        opacity: 0.55;
+      }
+      100% {
+        transform: translateY(-116px) scale(0.74);
+        opacity: 0;
+      }
+    }
+
+    @keyframes enterActive {
+      0% {
+        transform: translateY(34px) scale(0.98);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .node.is-lifting,
+      .node.is-entering {
+        animation: none;
+      }
+
+      .node.is-lifting,
+      .node.is-entering {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 840px) {
+      body {
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      .stage {
+        width: 100%;
+        max-width: 100vw;
+        padding: 22px;
+        overflow-x: hidden;
+      }
+
+      .topbar,
+      .footer,
+      .archive,
+      .node-header,
+      .node-body,
+      .node-body.is-three,
+      .note-strip,
+      .evidence-board,
+      .agent-grid,
+      .evidence-storage,
+      .schema-list {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar,
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar,
+      .footer,
+      .archive,
+      .canvas,
+      .node {
+        width: 100%;
+        max-width: calc(100vw - 44px);
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .node-header,
+      .node-body,
+      .note-strip,
+      .evidence-board,
+      .evidence-storage {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+
+      .panel-title {
+        flex-wrap: wrap;
+      }
+
+      .step {
+        grid-template-columns: 26px minmax(0, 1fr);
+      }
+
+      .meter {
+        text-align: left;
+      }
+
+      .archive-card {
+        width: 100%;
+      }
+
+      .archive-card span {
+        white-space: normal;
+      }
+
+      .orbit {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>银行欺诈告警审计工作流</span>
+      </div>
+      <div class="top-actions">
+        <span class="pill">中文初稿</span>
+        <button class="control" id="advanceButton" type="button">下一步</button>
+      </div>
+    </header>
+
+    <section class="archive" id="archive" aria-label="步骤导航">
+      <div class="archive-label">步骤导航</div>
+      <div class="archive-slot" id="archiveSlot"></div>
+      <button class="control" id="resetButton" type="button">重置</button>
+    </section>
+
+    <section class="canvas" aria-label="传统 alert 审计 block">
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+
+      <article class="node" id="activeCard">
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 01</span></div>
+            <h1>传统告警审计是什么样的</h1>
+            <p class="subtitle">规则或监控系统先打出告警，分析员再逐项查证历史交易流水、KYC、设备记录、人员关系、历史案件和政策条文，最后撰写一份报告，并基于此做出最终决定。</p>
+          </div>
+          <div class="meter">
+            <small>平均审计时间</small>
+            <strong>30~60 分钟</strong>
+          </div>
+        </div>
+
+        <div class="node-body">
+          <section class="panel">
+            <div class="panel-title">
+              <span>传统处理链路</span>
+              <span class="tag">顺序处理</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>告警触发</b>
+                  <span>来自交易监控（规则模型 / 机器学习模型）、执法请求或监管要求。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>人工查证</b>
+                  <span>分析员在多个系统和数据库之间切换，核对客户画像、交易历史、交易对手方和账户行为。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>撰写调查报告</b>
+                  <span>把可疑因素、合理解释、证据链接和缺失证据写成可审计的调查报告。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>最终处置决定</b>
+                  <span>关闭为误报、升级给高级复核人，或进入 SAR/STR 申报判断。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>传统模式的摩擦</span>
+              <span class="tag">为何慢</span>
+            </div>
+            <div class="frictions">
+              <div class="friction">
+                <b>证据分散</b>
+                <span>KYC、交易、设备、案件备注、政策条文分散在不同系统和数据库，调查员反复复制粘贴。</span>
+              </div>
+              <div class="friction">
+                <b>叙述质量不稳定</b>
+                <span>同一个风险信号，资深分析员和新人写出的判断依据可能完全不同。</span>
+              </div>
+              <div class="friction">
+                <b>主观判断压力大</b>
+                <span>风险信号不是犯罪证明，是否升级依赖上下文、政策和可解释的判断链。</span>
+              </div>
+              <div class="friction">
+                <b>SLA 与 backlog 压力</b>
+                <span>告警量大时，人工查证容易只保留结论，遗漏中间证据和不申报的理由。</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>监管重点</b>
+            <span>流程要能从初始发现追到最终处置，并说明为什么申报或不申报。</span>
+          </div>
+          <div class="note">
+            <b>文档要求</b>
+            <span>SAR 和支撑材料通常需要留存，方便监管或执法机构调阅。</span>
+          </div>
+          <div class="note">
+            <b>Agent 切入点</b>
+            <span>先不替代决策，而是自动拉取证据、整理时间线、统一报告质量。</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div class="source-line">
+        <span class="bar"></span>
+        <span>下一步再讲 Agent workflow 如何改造这条链路。</span>
+      </div>
+      <span>中文演示稿持续迭代中</span>
+    </footer>
+  </main>
+
+  <script>
+    const archive = document.getElementById("archive");
+    const archiveSlot = document.getElementById("archiveSlot");
+    const activeCard = document.getElementById("activeCard");
+    const advanceButton = document.getElementById("advanceButton");
+    const resetButton = document.getElementById("resetButton");
+    const blockOneHtml = activeCard.innerHTML;
+    const blocks = [
+      {
+        number: "01",
+        title: "传统告警审计是什么样的",
+        html: blockOneHtml
+      },
+      {
+        number: "02",
+        title: "双路 ML Pipeline 生成告警",
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 02</span></div>
+            <h1>ML Pipeline 生成告警</h1>
+            <p class="subtitle">在 Agent 调查之前，AutoEncoder pipeline 和 Graph Model pipeline 并行产出风险信号，再融合成告警输入。</p>
+          </div>
+        </div>
+
+        <div class="node-body">
+          <section class="panel">
+            <div class="panel-title">
+              <span>检测层输出</span>
+              <span class="tag">模型产物</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>AutoEncoder Pipeline</b>
+                  <span>输入实时交易流水、账户画像和设备记录，学习账户正常行为模式，输出 anomaly score。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>Graph Model Pipeline</b>
+                  <span>输入账户、人员、设备、交易对手方关系图，识别共享设备、资金链路和高风险邻居，只输出 graph risk score。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>融合生成告警</b>
+                  <span>融合 anomaly score 和 graph risk score，输出风险分、风险类型和需要进入调查的告警。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>Top N 触发特征</b>
+                  <span>过去 1 小时交易额超过 50,000 元，交易次数超过 12 次，且高于该账户历史阈值 3 倍。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>标准化 Alert 对象</span>
+              <span class="tag">下一步输入</span>
+            </div>
+            <div class="frictions">
+              <div class="friction">
+                <b>alert_id</b>
+                <span>唯一告警编号，用于关联后续证据、查询记录、报告和审计轨迹。</span>
+              </div>
+              <div class="friction">
+                <b>account_id 与 alert_time</b>
+                <span>限定后续取证范围，避免 Agent 无边界查询数据库。</span>
+              </div>
+              <div class="friction">
+                <b>risk_score 与 risk_type</b>
+                <span>说明模型判断强度和风险类型，帮助后续确定调查优先级。</span>
+              </div>
+              <div class="friction">
+                <b>top_features</b>
+                <span>把模型触发原因显式列出，后续每个特征都要被证据 Agent 核验。</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>边界清楚</b>
+            <span>ML Pipeline 负责发现异常和解释触发特征，不负责拉证据和写调查报告。</span>
+          </div>
+          <div class="note">
+            <b>为什么重要</b>
+            <span>Agent 的第一步不是凭空调查，而是接住模型输出的可解释触发特征。</span>
+          </div>
+          <div class="note">
+            <b>下一步</b>
+            <span>Evidence Orchestrator 会把 Top N 特征拆成并行取证任务，并保存证据包。</span>
+          </div>
+        </div>`
+      },
+      {
+        number: "03",
+        title: "Evidence Agents",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 03</span></div>
+            <h1>Evidence Agents</h1>
+            <p class="subtitle">三个 sub-agent 分别核验金额、次数和历史阈值，统一输出 evidence card，并把查询、样例行、数据血缘和工具调用全部落盘。</p>
+          </div>
+        </div>
+
+        <div class="evidence-board">
+          <section class="panel">
+            <div class="panel-title">
+              <span>Top N feature fan-out</span>
+              <span class="tag">3 sub-agents</span>
+            </div>
+            <div class="agent-grid">
+              <article class="agent-tile">
+                <div class="agent-head"><span>Sub-agent 1</span><span>金额</span></div>
+                <div class="agent-title">过去 12 小时交易额</div>
+                <p class="agent-claim">Feature 1: past_12h_amount_gt_50000</p>
+                <div class="agent-copy">核验过去 12 小时交易额是否真的超过 50,000，并拉取交易明细。</div>
+                <div class="agent-return">
+                  <span>返回</span>
+                  <b>total_amount</b>
+                  <b>逐笔金额</b>
+                  <b>timestamp</b>
+                  <b>direction</b>
+                  <b>counterparty</b>
+                </div>
+                <div class="result-line">示例结论: 68,420 元，14 笔，超过 50,000。</div>
+              </article>
+
+              <article class="agent-tile">
+                <div class="agent-head"><span>Sub-agent 2</span><span>次数</span></div>
+                <div class="agent-title">过去 12 小时交易次数</div>
+                <p class="agent-claim">Feature 2: past_12h_count_gt_12</p>
+                <div class="agent-copy">核验过去 12 小时交易次数是否超过 12，并返回每笔交易的时间、金额和渠道。</div>
+                <div class="agent-return">
+                  <span>返回</span>
+                  <b>transaction_count</b>
+                  <b>timestamp</b>
+                  <b>amount</b>
+                  <b>channel</b>
+                  <b>account_id</b>
+                </div>
+                <div class="result-line">示例结论: 14 笔，超过阈值 12 笔。</div>
+              </article>
+
+              <article class="agent-tile">
+                <div class="agent-head"><span>Sub-agent 3</span><span>阈值</span></div>
+                <div class="agent-title">当前金额与历史阈值</div>
+                <p class="agent-claim">Feature 3: current_amount_gt_3x_baseline</p>
+                <div class="agent-copy">核验当前行为是否超过账户历史阈值 3 倍，并解释阈值计算方式。</div>
+                <div class="agent-return">
+                  <span>返回</span>
+                  <b>historical_mean</b>
+                  <b>percentile</b>
+                  <b>baseline_method</b>
+                  <b>current_value</b>
+                  <b>ratio</b>
+                </div>
+                <div class="result-line">示例结论: 当前值为历史阈值 3.4 倍。</div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>Evidence card schema</span>
+              <span class="tag">统一 schema</span>
+            </div>
+            <div class="schema-list">
+              <div class="schema-row">
+                <b>feature_id, claim, status</b>
+                <span>past_12h_amount_gt_50000。过去 12 小时交易额超过 50,000。verified。</span>
+                <div class="schema-pills"><span class="schema-pill">feature_id</span><span class="schema-pill">claim</span><span class="schema-pill">status</span></div>
+              </div>
+              <div class="schema-row">
+                <b>summary, details</b>
+                <span>过去 12 小时总交易额为 68,420，超过阈值 50,000。details 存时间窗、总金额和交易次数。</span>
+                <div class="schema-pills"><span class="schema-pill">window_start</span><span class="schema-pill">window_end</span><span class="schema-pill">total_amount</span><span class="schema-pill">transaction_count</span></div>
+              </div>
+              <div class="schema-row">
+                <b>rows_sample</b>
+                <span>保留样例交易行，不只给结论。字段包括 timestamp、amount、direction、counterparty、channel。</span>
+                <div class="schema-pills"><span class="schema-pill">timestamp</span><span class="schema-pill">amount</span><span class="schema-pill">counterparty</span></div>
+              </div>
+              <div class="schema-row">
+                <b>data_lineage</b>
+                <span>记录 database、tables、columns、query_file、query hash、执行时间和返回行数。</span>
+                <div class="schema-pills"><span class="schema-pill">fraud_dw</span><span class="schema-pill">transactions</span><span class="schema-pill">queries/feature_01.sql</span></div>
+              </div>
+              <div class="schema-row">
+                <b>tool_trace_ref</b>
+                <span>Evidence card 记录 tool trace 引用，不存完整日志。字段包括 tool_call_id、agent_id、tool_name、input_hash、output_hash、duration_ms 和 status。</span>
+                <div class="schema-pills"><span class="schema-pill">tool_call_id</span><span class="schema-pill">tool_name</span><span class="schema-pill">input_hash</span><span class="schema-pill">output_hash</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="evidence-storage">
+          <div class="artifact-card">
+            <b>Postgres JSONB</b>
+            <div class="audit-lines">
+              <div class="audit-line"><i></i><span>case_id, alert_id, account_id</span></div>
+              <div class="audit-line"><i></i><span>risk_score, risk_type, status</span></div>
+              <div class="audit-line"><i></i><span>evidence_uri, query_uri, version</span></div>
+              <div class="audit-line"><i></i><span>tool_trace_id, audit_log_uri</span></div>
+            </div>
+          </div>
+          <div class="artifact-card">
+            <b>S3 / MinIO Object Storage</b>
+            <pre class="storage-tree">s3://fraud-case-store/alert_12345/
+  manifest.json
+  evidence/feature_01_past_12h_amount.json
+  evidence/feature_02_past_12h_count.json
+  evidence/feature_03_baseline_ratio.json
+  queries/feature_01.sql
+  queries/feature_02.sql
+  queries/feature_03.sql
+  audit/tool_calls.jsonl</pre>
+          </div>
+          <div class="artifact-card">
+            <b>Append-only Audit Log</b>
+            <div class="audit-lines">
+              <div class="audit-line"><i></i><span>tool_calls.jsonl</span></div>
+              <div class="audit-line"><i></i><span>query_hash, row_count, duration_ms</span></div>
+              <div class="audit-line"><i></i><span>agent_id, tool_name, status, error</span></div>
+              <div class="audit-line"><i></i><span>input_hash, output_hash, retry_count</span></div>
+            </div>
+          </div>
+        </div>`
+      },
+      {
+        number: "04",
+        title: "Report Draft Agent",
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 04</span></div>
+            <h1>Report Draft Agent</h1>
+            <p class="subtitle">读取 case_store 里的 evidence cards，不直接查库，把已核验证据、交易时间线、合理解释和缺失证据写成可复核的调查报告初稿，最终决定权保留给 Investigator。</p>
+          </div>
+          <div class="meter">
+            <small>平均 workflow</small>
+            <strong>2 分钟</strong>
+          </div>
+        </div>
+
+        <div class="node-body">
+          <section class="panel">
+            <div class="panel-title">
+              <span>报告生成链路</span>
+              <span class="tag">只读证据包</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>读取 case_store</b>
+                  <span>读取 manifest.json、三个 evidence card、query_file 引用和 tool_calls.jsonl，不直接访问原始数据库。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>生成交易时间线</b>
+                  <span>把过去 12 小时的交易金额、次数、方向、渠道和交易对手方按时间排序，形成 investigator 可读时间线。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>区分证据状态</b>
+                  <span>把每个 claim 标成已核验、缺失证据或需要人工确认，避免报告把不确定信息写成确定结论。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>生成报告初稿</b>
+                  <span>输出风险摘要、已核验证据、合理解释、缺失证据和建议处置路径，但不自动关闭案件或触发升级。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">05</span>
+                <div>
+                  <b>Investigator 最终审核</b>
+                  <span>如果处置会带来重大影响，例如冻结账户、升级复核、提交可疑活动报告或影响客户关系，Agent 只能给出建议，最终决定由 Investigator 作出。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>示例报告</span>
+              <span class="tag">报告片段</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>风险摘要</b>
+                  <span>账户在过去 12 小时内交易额 68,420 元，共 14 笔，超过金额阈值和次数阈值，并高于账户历史阈值 3.4 倍。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>已核验证据</b>
+                  <span>金额、次数和历史阈值三项 claim 均已由 evidence card 核验，引用 feature_01、feature_02、feature_03。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>合理解释</b>
+                  <span>目前未发现工资入账、定期投资或已知大额付款计划可以解释该 12 小时交易集中行为。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>缺失证据与建议</b>
+                  <span>KYC 最新状态、交易对手方受益人信息和历史相似案件尚未完成核验。建议人工补查后决定是否升级。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>报告结构</b>
+            <span>风险摘要、交易时间线、已核验证据、合理解释、缺失证据、建议处置路径和引用链接。</span>
+          </div>
+          <div class="note">
+            <b>审计原则</b>
+            <span>报告里每个结论都要能回到 evidence card、query_file、query hash 或明确标成缺失证据。</span>
+          </div>
+          <div class="note">
+            <b>人工决定权</b>
+            <span>高影响处置必须 human-in-the-loop。Agent 负责证据、解释和建议，不拥有最终处置权限。</span>
+          </div>
+        </div>`
+      },
+      {
+        number: "05",
+        title: "SFT / RLVR / RLHF 反馈闭环",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
+            <h1>SFT / RLVR / RLHF 反馈闭环</h1>
+            <p class="subtitle">SFT 冷启动高质量 tool-use trajectory，RLVR 用可验证奖励优化轨迹正确性，RLHF 对齐资深 Investigator 的审计偏好和风险边界。</p>
+          </div>
+        </div>
+
+        <div class="node-body is-three">
+          <section class="panel">
+            <div class="panel-title">
+              <span>SFT 训练什么</span>
+              <span class="tag">模仿好轨迹</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>脱敏上下文作为输入</b>
+                  <span>使用经过权限过滤和脱敏处理的告警摘要、风险类型、Top N features、可用工具列表、表结构摘要和政策引用，不直接训练原始客户明细。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>学习工具选择轨迹</b>
+                  <span>模型学习不同风险信号下该调用哪个工具，例如交易查询、KYC 查询、设备查询、Graph 查询、policy RAG 或历史案件检索。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>学习工具参数构造</b>
+                  <span>模型学习如何根据告警上下文填写 account_id、window_start、window_end、feature_id、query_template_id、tables、columns 和 threshold。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>学习证据解释</b>
+                  <span>工具返回结果后，模型学习生成 summary、details、rows_sample、data_lineage、tool_trace_ref 和缺失证据说明。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">05</span>
+                <div>
+                  <b>学习报告与 summary 风格</b>
+                  <span>最终训练目标是人工认可后的调查计划、证据引用结构、风险摘要、合理解释、建议路径和 draft report，并学习言简意赅、可审计的 summary 风格。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>RLVR 如何训练 trajectory</span>
+              <span class="tag">可验证奖励</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>验证 tool choice</b>
+                  <span>奖励正确选择交易查询、KYC、设备、Graph、policy RAG 等工具，惩罚跳过关键证据或调用无关工具。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>验证 tool arguments</b>
+                  <span>检查 account_id、时间窗口、feature_id、query_template_id、tables、columns 和 threshold 是否和告警上下文一致。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>验证 query 与计算</b>
+                  <span>SQL 必须可执行，表字段正确，时间窗正确，金额、次数、row_count 和 threshold ratio 能被机械复算。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>验证 evidence card</b>
+                  <span>schema 必须合法，claim、status、summary、rows_sample、data_lineage 和 tool_trace_ref 都要完整可回溯。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">05</span>
+                <div>
+                  <b>验证端到端完成</b>
+                  <span>从 Top N features 到 evidence cards 再到 draft report，每个结论都必须能追溯到 query、tool trace 和原始数据。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>RLHF 如何塑造 Agent 行为</span>
+              <span class="tag">Human preference</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>定义审计偏好</b>
+                  <span>把资深 Investigator 对好报告、好证据链、好 tool trace 和好处置建议的判断，转成可学习的偏好信号。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>约束风险边界</b>
+                  <span>奖励谨慎、不越权、能承认缺失证据的 Agent 行为，惩罚过度自信、跳过查证、替代 Investigator 决策的输出。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>优化端到端 workflow</b>
+                  <span>偏好不只看最终文本，也看 tool choice、tool arguments、query 可复核性、证据覆盖率、summary 清晰度和建议路径。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>沉淀组织判断</b>
+                  <span>每次人工复核都会把银行内部的风险口径、升级标准和报告偏好沉淀下来，让 Agent 随业务和监管变化持续对齐。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>当前案例的输入</b>
+            <span>Alert、Top N features、账户窗口、表结构、tool calls、tool arguments、queries、rows_sample、evidence cards、data_lineage 和人工修改都进入训练样本。</span>
+          </div>
+          <div class="note">
+            <b>当前案例的输出</b>
+            <span>输出不是最终处置，而是调查计划、可复核证据引用、缺失证据说明、建议路径和 draft report。</span>
+          </div>
+          <div class="note">
+            <b>训练价值</b>
+            <span>SFT 学会怎么走，RLVR 训练走得对不对，RLHF 训练是否符合资深复核人的审计偏好。</span>
+          </div>
+        </div>`
+      },
+      {
+        number: "06",
+        title: "Agent 自动化评估体系",
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 06</span></div>
+            <h1>Agent 自动化评估体系</h1>
+            <p class="subtitle">用历史已复核案件和标准答案回放整条 workflow，验证 Evidence Agents、Report Draft Agent 和最终复核包是否准确、稳定、可复核，并检查 Agent 是否越过人工决策边界。</p>
+          </div>
+        </div>
+
+        <div class="node-body">
+          <section class="panel">
+            <div class="panel-title">
+              <span>评估执行链路</span>
+              <span class="tag">离线回放</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>构建黄金评估集</b>
+                  <span>从已完成复核的 alert 中抽样，保留告警信息、Top N 触发特征、人工核验证据、最终报告和处置结论。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>回放完整 workflow</b>
+                  <span>同一批 alert 重新跑 Evidence Agents、case_store 写入和 Report Draft Agent，生成新的 evidence cards 与报告初稿。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>对齐标准答案</b>
+                  <span>把 Agent 输出和人工标准答案比较，检查金额、次数、时间窗、交易方向、引用证据和缺失证据标注。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>生成评估报告</b>
+                  <span>输出每个 Agent、每类风险、每种失败原因的指标，定位是查询错误、证据缺失、推理错误、报告措辞问题还是越权决策。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>核心评估指标</span>
+              <span class="tag">评估维度</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>准确性</b>
+                  <span>SQL 是否查对表、字段和时间窗，evidence card 的金额、次数、row_count、data_lineage 是否和人工核验一致。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>鲁棒性</b>
+                  <span>遇到缺字段、查询超时、KYC 过期、交易对手方缺失或证据冲突时，Agent 是否稳定降级并标注不确定性。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>复杂任务完成率</b>
+                  <span>从 alert 到 evidence cards、报告初稿、复核包的端到端跑通率，以及是否在目标审计时限内完成。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>决策边界</b>
+                  <span>检查 Agent 是否只输出证据、解释和建议，不能自动关闭案件、冻结账户、提交申报或替代 Investigator 做最终决定。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>当前案例怎么评估</b>
+            <span>检查三个触发特征是否都被正确核验，68,420 元、14 笔、3.4 倍历史阈值是否能回到查询结果。</span>
+          </div>
+          <div class="note">
+            <b>失败样本沉淀</b>
+            <span>失败案例进入错误分类，区分查询失败、证据不全、推理错误、报告引用错误和越权决策。</span>
+          </div>
+          <div class="note">
+            <b>上线门槛</b>
+            <span>只有在黄金评估集上通过准确性、鲁棒性、完成率和人工决策边界门槛，Agent 才进入下一轮灰度。</span>
+          </div>
+        </div>`
+      },
+      {
+        number: "07",
+        title: "MLOps 与生产可靠性",
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 07</span></div>
+            <h1>MLOps 与生产可靠性</h1>
+            <p class="subtitle">当 workflow 进入生产环境，需要同时管理 ML pipeline、Agent 工具链、数据库依赖和审计日志，确保告警不中断、证据不丢失、失败可回滚。</p>
+          </div>
+        </div>
+
+        <div class="node-body">
+          <section class="panel">
+            <div class="panel-title">
+              <span>生产监控</span>
+              <span class="tag">持续观测</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>数据质量监控</b>
+                  <span>监控实时交易流水、账户画像、设备记录和图数据的延迟、缺失率、字段范围、schema 变更、特征新鲜度、数据漂移（data drift）和特征漂移（feature drift）。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>模型健康监控</b>
+                  <span>跟踪 anomaly score、graph risk score、风险类型分布、阈值命中率、特征漂移和延迟标签回流表现。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>Weekly model retraining</b>
+                  <span>每周基于延迟标签、人工复核结果和最新数据快照重训 AutoEncoder / Graph Model，通过评估门槛后才发布新版本。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>训练服务一致性</b>
+                  <span>避免 training-serving skew，确保训练特征、线上特征、预处理逻辑、缺失值策略、时间窗口和模型版本在 serving path 中完全一致。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">05</span>
+                <div>
+                  <b>Agent 运行监控</b>
+                  <span>监控工具调用成功率、SQL 超时率、队列深度、p95 延迟、token 成本、报告生成失败率和人工退回率。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">06</span>
+                <div>
+                  <b>审计日志监控</b>
+                  <span>检查 tool_calls.jsonl、query hash、model version、prompt version 和 evidence card version 是否完整写入。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>故障处理与灾备</span>
+              <span class="tag">Fail-safe</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>Fallback 路径</b>
+                  <span>LLM、模型服务或证据工具异常时，系统回退到规则告警、人工队列、上一个稳定模型或只读证据查询模式。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>版本回滚</b>
+                  <span>每次上线记录模型版本、prompt 版本、工具版本、数据快照和配置，灰度失败时无需重新训练即可切回上一版。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>数据库灾备</b>
+                  <span>交易库、case_store 和对象存储需要主从复制、定期备份、跨可用区恢复、RTO/RPO 指标和恢复演练。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>权限与应急手册</b>
+                  <span>生产工具按最小权限运行，密钥轮换、访问审计、告警升级、人工接管和事后复盘都有明确 runbook。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>上线策略</b>
+            <span>先 shadow run，再小流量灰度，指标稳定后扩大覆盖；任何高影响处置仍保持 Investigator 最终决定权。</span>
+          </div>
+          <div class="note">
+            <b>生产指标</b>
+            <span>同时看业务指标、系统指标、模型指标和审计指标，避免只监控服务是否在线。</span>
+          </div>
+          <div class="note">
+            <b>灾备目标</b>
+            <span>核心要求是告警不漏、证据不丢、日志不可篡改、故障可降级、版本可回滚。</span>
+          </div>
+        </div>`
+      },
+      {
+        number: "08",
+        title: "模型运行方式",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 08</span></div>
+            <h1>模型运行方式</h1>
+            <p class="subtitle">Agent Harness 不绑定单一模型来源，同一套工具调用、证据存储和审计日志，可以接 OpenAI / Claude API、自有 GPU 集群，也可以在客户只有 CPU 机器时运行轻量模型。</p>
+          </div>
+        </div>
+
+        <div class="node-body is-three">
+          <section class="panel">
+            <div class="panel-title">
+              <span>API 模式</span>
+              <span class="tag">OpenAI / Claude</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>调用托管模型 API</b>
+                  <span>Report Draft Agent、Reasoning Agent 或 Evidence Orchestrator 可以通过 API 调用 OpenAI 或 Claude。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>适合高质量推理</b>
+                  <span>适合复杂报告组织、自然语言解释、policy reasoning 和低维护成本的 PoC 阶段。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>Harness 负责边界</b>
+                  <span>API 模型只能通过受控 tool 接触 evidence card，不直接访问数据库或绕过权限。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>审计记录一致</b>
+                  <span>无论调用 OpenAI 还是 Claude，prompt version、model name、tool call 和输出摘要都进入 audit log。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>自有 GPU 集群模式</span>
+              <span class="tag">Qwen / DeepSeek</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>开源模型私有部署</b>
+                  <span>Qwen、DeepSeek 等模型可以跑在银行自己的 GPU 集群中，适合数据出域敏感或成本可控的场景。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>统一 OpenAI-compatible 接口</b>
+                  <span>通过 vLLM、TGI 或内部模型网关暴露 chat completions 接口，Agent Harness 上层不用改 workflow。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>推理与工具隔离</b>
+                  <span>模型只生成计划、查询草稿或报告文本，真正查库、写证据包、写审计日志仍由受控工具执行。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>可按任务路由</b>
+                  <span>高敏数据走自有 GPU 或 CPU 模型，复杂语言报告可走 API 模型；路由策略记录在 runtime_policy。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>CPU 机器模式</span>
+              <span class="tag">轻量模型</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>适合无 GPU 客户</b>
+                  <span>部分客户无法采购本地 GPU 集群，也无法使用云端 GPU，可以在普通 CPU 机器上部署轻量模型或量化模型。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>承担同一套任务</b>
+                  <span>同样接入 Agent Harness，负责调查计划、SQL 草稿、证据摘要、报告初稿和规则化复核提示。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>通过调度控制成本</b>
+                  <span>CPU 模式适合低并发、批处理、夜间回放和小模型任务；复杂推理可降级为模板、规则或人工队列。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>接口保持一致</b>
+                  <span>通过 llama.cpp、vLLM CPU backend 或内部模型网关暴露兼容接口，上层 workflow 不需要重写。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>核心表达</b>
+            <span>Agent Harness 是 runtime abstraction，不是某个模型 API。模型可以替换，工具、状态和审计边界保持一致。</span>
+          </div>
+          <div class="note">
+            <b>runtime_policy</b>
+            <span>按任务类型、数据敏感度、成本、延迟和合规要求选择 OpenAI / Claude API、自有 GPU 模型或 CPU 轻量模型。</span>
+          </div>
+          <div class="note">
+            <b>架构价值</b>
+            <span>业务能力不绑定单一模型供应商或硬件形态，Agent Harness 支持 API、GPU、CPU 三类后端和同一套可审计工具链。</span>
+          </div>
+        </div>`
+      },
+
+    ];
+    let activeIndex = 0;
+
+    function renderArchive() {
+      archive.classList.add("has-card");
+      archiveSlot.innerHTML = blocks.map((block, index) => {
+        const currentClass = index === activeIndex ? " is-current" : "";
+        const ariaCurrent = index === activeIndex ? ` aria-current="step"` : "";
+        return `<button class="archive-card${currentClass}" type="button" data-block-index="${index}"${ariaCurrent}><b>${block.number}</b><span>${block.title}</span></button>`;
+      }).join("");
+    }
+
+    function showBlock(index, { animate = true } = {}) {
+      if (index < 0 || index >= blocks.length) return;
+      activeIndex = index;
+      activeCard.innerHTML = blocks[activeIndex].html;
+      activeCard.classList.remove("is-lifting");
+      activeCard.classList.toggle("is-wide", Boolean(blocks[activeIndex].wide));
+      activeCard.classList.toggle("is-entering", animate);
+      advanceButton.textContent = activeIndex >= blocks.length - 1 ? "已到最新" : "下一步";
+      advanceButton.disabled = activeIndex >= blocks.length - 1;
+      renderArchive();
+
+      if (animate) {
+        window.setTimeout(() => {
+          activeCard.classList.remove("is-entering");
+        }, 580);
+      }
+    }
+
+    function archiveCurrentBlock() {
+      if (activeCard.classList.contains("is-lifting")) return;
+      if (activeIndex >= blocks.length - 1) return;
+      const currentIndex = activeIndex;
+      activeCard.classList.add("is-lifting");
+      advanceButton.disabled = true;
+
+      window.setTimeout(() => {
+        showBlock(currentIndex + 1);
+      }, 700);
+    }
+
+    function resetBlock() {
+      showBlock(0, { animate: false });
+    }
+
+    renderArchive();
+    advanceButton.addEventListener("click", archiveCurrentBlock);
+    resetButton.addEventListener("click", resetBlock);
+    archiveSlot.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-block-index]");
+      if (!button) return;
+      showBlock(Number(button.dataset.blockIndex));
+    });
+  </script>
+</body>
+</html>
