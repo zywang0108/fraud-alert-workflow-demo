@@ -402,6 +402,10 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    .node-body.is-single {
+      grid-template-columns: 1fr;
+    }
+
     .panel {
       min-height: 0;
       border: 1px solid var(--line);
@@ -497,6 +501,244 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 18px rgba(255, 109, 109, 0.36);
+    }
+
+    .planner-card {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .planner-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) auto minmax(0, 1.58fr) auto minmax(0, 0.9fr);
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .planner-node {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.18);
+      border-radius: 8px;
+      background: rgba(19, 36, 31, 0.68);
+      padding: 13px;
+    }
+
+    .planner-node.is-input {
+      border-color: rgba(94, 232, 212, 0.34);
+    }
+
+    .planner-node.is-plan {
+      border-color: rgba(255, 201, 111, 0.36);
+      background: rgba(255, 201, 111, 0.08);
+    }
+
+    .planner-node.is-output {
+      border-color: rgba(168, 255, 182, 0.34);
+    }
+
+    .planner-node small {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .planner-node b {
+      display: block;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .planner-node span,
+    .planner-step span,
+    .planner-result-line span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+      overflow-wrap: anywhere;
+    }
+
+    .planner-arrow {
+      display: grid;
+      place-items: center;
+      min-width: 28px;
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .planner-steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .planner-step {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.16);
+      border-radius: 8px;
+      background: rgba(8, 17, 15, 0.46);
+      padding: 10px;
+    }
+
+    .planner-step b {
+      display: block;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .planner-result {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .planner-result-line {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .planner-result-line i {
+      width: 10px;
+      height: 10px;
+      margin-top: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(168, 255, 182, 0.36);
+    }
+
+    .planner-result-line.is-review i {
+      background: var(--amber);
+      box-shadow: 0 0 18px rgba(255, 201, 111, 0.36);
+    }
+
+    .guardrail-gate {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .gate-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 0.78fr) auto minmax(0, 1.5fr) auto minmax(0, 0.82fr);
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .gate-node {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.18);
+      border-radius: 8px;
+      background: rgba(19, 36, 31, 0.68);
+      padding: 13px;
+    }
+
+    .gate-node.is-input {
+      border-color: rgba(94, 232, 212, 0.34);
+    }
+
+    .gate-node.is-decision {
+      border-color: rgba(255, 201, 111, 0.36);
+      background: rgba(255, 201, 111, 0.08);
+    }
+
+    .gate-node.is-output {
+      border-color: rgba(168, 255, 182, 0.34);
+    }
+
+    .gate-node small {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .gate-node b {
+      display: block;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .gate-node span,
+    .gate-check span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+      overflow-wrap: anywhere;
+    }
+
+    .gate-arrow {
+      display: grid;
+      place-items: center;
+      min-width: 28px;
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .gate-checks {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .gate-check {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.16);
+      border-radius: 8px;
+      background: rgba(8, 17, 15, 0.46);
+      padding: 10px;
+    }
+
+    .gate-check b {
+      display: block;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .gate-result {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .gate-result-line {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: start;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .gate-result-line i {
+      width: 10px;
+      height: 10px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(168, 255, 182, 0.36);
+    }
+
+    .gate-result-line.is-blocked i {
       background: var(--red);
       box-shadow: 0 0 18px rgba(255, 109, 109, 0.36);
     }
@@ -833,6 +1075,19 @@
         width: 100%;
       }
 
+      .gate-flow,
+      .gate-checks,
+      .planner-flow,
+      .planner-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .gate-arrow,
+      .planner-arrow {
+        min-height: 20px;
+        transform: rotate(90deg);
+      }
+
       .archive-card span {
         white-space: normal;
       }
@@ -851,7 +1106,7 @@
         <span>银行欺诈告警审计工作流</span>
       </div>
       <div class="top-actions">
-        <span class="pill">中文初稿</span>
+        <span class="pill">Agent 审计工作流</span>
         <button class="control" id="advanceButton" type="button">下一步</button>
       </div>
     </header>
@@ -871,7 +1126,7 @@
           <div>
             <div class="eyebrow"><span class="pulse"></span><span>步骤 01</span></div>
             <h1>传统告警审计是什么样的</h1>
-            <p class="subtitle">规则或监控系统先打出告警，分析员再逐项查证历史交易流水、KYC、设备记录、人员关系、历史案件和政策条文，最后撰写一份报告，并基于此做出最终决定。</p>
+            <p class="subtitle">告警触发后，分析员手工查交易、KYC、设备、关系和政策，再写报告并做最终判断。</p>
           </div>
           <div class="meter">
             <small>平均审计时间</small>
@@ -890,28 +1145,28 @@
                 <span class="step-number">01</span>
                 <div>
                   <b>告警触发</b>
-                  <span>来自交易监控（规则模型 / 机器学习模型）、执法请求或监管要求。</span>
+                  <span>规则、模型、执法请求或监管要求触发 alert。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
                   <b>人工查证</b>
-                  <span>分析员在多个系统和数据库之间切换，核对客户画像、交易历史、交易对手方和账户行为。</span>
+                  <span>跨系统核对画像、交易、对手方和账户行为。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
                   <b>撰写调查报告</b>
-                  <span>把可疑因素、合理解释、证据链接和缺失证据写成可审计的调查报告。</span>
+                  <span>整理可疑因素、解释、证据链接和缺失证据。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
                   <b>最终处置决定</b>
-                  <span>关闭为误报、升级给高级复核人，或进入 SAR/STR 申报判断。</span>
+                  <span>关闭、升级复核，或进入 SAR/STR 判断。</span>
                 </div>
               </div>
             </div>
@@ -925,19 +1180,19 @@
             <div class="frictions">
               <div class="friction">
                 <b>证据分散</b>
-                <span>KYC、交易、设备、案件备注、政策条文分散在不同系统和数据库，调查员反复复制粘贴。</span>
+                <span>KYC、交易、设备、案件备注和政策分散在多个系统。</span>
               </div>
               <div class="friction">
                 <b>叙述质量不稳定</b>
-                <span>同一个风险信号，资深分析员和新人写出的判断依据可能完全不同。</span>
+                <span>同一风险信号，不同分析员给出的依据不一致。</span>
               </div>
               <div class="friction">
                 <b>主观判断压力大</b>
-                <span>风险信号不是犯罪证明，是否升级依赖上下文、政策和可解释的判断链。</span>
+                <span>风险信号不是定论，升级依赖上下文和政策。</span>
               </div>
               <div class="friction">
                 <b>SLA 与 backlog 压力</b>
-                <span>告警量大时，人工查证容易只保留结论，遗漏中间证据和不申报的理由。</span>
+                <span>告警堆积时，过程证据和不申报理由容易丢失。</span>
               </div>
             </div>
           </section>
@@ -946,26 +1201,22 @@
         <div class="note-strip">
           <div class="note">
             <b>监管重点</b>
-            <span>流程要能从初始发现追到最终处置，并说明为什么申报或不申报。</span>
+            <span>从发现到处置必须可追溯。</span>
           </div>
           <div class="note">
             <b>文档要求</b>
-            <span>SAR 和支撑材料通常需要留存，方便监管或执法机构调阅。</span>
+            <span>SAR 与支撑材料需要留存。</span>
           </div>
           <div class="note">
             <b>Agent 切入点</b>
-            <span>先不替代决策，而是自动拉取证据、整理时间线、统一报告质量。</span>
+            <span>自动拉证据、排时间线、统一报告质量。</span>
           </div>
         </div>
       </article>
     </section>
 
     <footer class="footer">
-      <div class="source-line">
-        <span class="bar"></span>
-        <span>下一步再讲 Agent workflow 如何改造这条链路。</span>
-      </div>
-      <span>中文演示稿持续迭代中</span>
+      <span>面向银行欺诈告警审计场景</span>
     </footer>
   </main>
 
@@ -990,7 +1241,7 @@
           <div>
             <div class="eyebrow"><span class="pulse"></span><span>步骤 02</span></div>
             <h1>ML Pipeline 生成告警</h1>
-            <p class="subtitle">在 Agent 调查之前，AutoEncoder pipeline 和 Graph Model pipeline 并行产出风险信号，再融合成告警输入。</p>
+            <p class="subtitle">AutoEncoder 和 Graph Model 先产出风险信号，再融合成标准 alert。</p>
           </div>
         </div>
 
@@ -1005,28 +1256,28 @@
                 <span class="step-number">01</span>
                 <div>
                   <b>AutoEncoder Pipeline</b>
-                  <span>输入实时交易流水、账户画像和设备记录，学习账户正常行为模式，输出 anomaly score。</span>
+                  <span>交易、画像、设备 → anomaly score。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
                   <b>Graph Model Pipeline</b>
-                  <span>输入账户、人员、设备、交易对手方关系图，识别共享设备、资金链路和高风险邻居，只输出 graph risk score。</span>
+                  <span>关系图 → 共享设备、资金链路、高风险邻居。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
                   <b>融合生成告警</b>
-                  <span>融合 anomaly score 和 graph risk score，输出风险分、风险类型和需要进入调查的告警。</span>
+                  <span>合并分数，输出 risk_score、risk_type 和 alert。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
                   <b>Top N 触发特征</b>
-                  <span>过去 1 小时交易额超过 50,000 元，交易次数超过 12 次，且高于该账户历史阈值 3 倍。</span>
+                  <span>金额、次数、历史阈值三类触发原因。</span>
                 </div>
               </div>
             </div>
@@ -1040,19 +1291,19 @@
             <div class="frictions">
               <div class="friction">
                 <b>alert_id</b>
-                <span>唯一告警编号，用于关联后续证据、查询记录、报告和审计轨迹。</span>
+                <span>关联证据、查询、报告和审计轨迹。</span>
               </div>
               <div class="friction">
                 <b>account_id 与 alert_time</b>
-                <span>限定后续取证范围，避免 Agent 无边界查询数据库。</span>
+                <span>限定取证对象和时间窗。</span>
               </div>
               <div class="friction">
                 <b>risk_score 与 risk_type</b>
-                <span>说明模型判断强度和风险类型，帮助后续确定调查优先级。</span>
+                <span>决定调查优先级和证据路径。</span>
               </div>
               <div class="friction">
                 <b>top_features</b>
-                <span>把模型触发原因显式列出，后续每个特征都要被证据 Agent 核验。</span>
+                <span>每个触发特征后续都要核验。</span>
               </div>
             </div>
           </section>
@@ -1061,28 +1312,373 @@
         <div class="note-strip">
           <div class="note">
             <b>边界清楚</b>
-            <span>ML Pipeline 负责发现异常和解释触发特征，不负责拉证据和写调查报告。</span>
+            <span>ML 发现异常，不写报告。</span>
           </div>
           <div class="note">
             <b>为什么重要</b>
-            <span>Agent 的第一步不是凭空调查，而是接住模型输出的可解释触发特征。</span>
+            <span>Agent 接住可解释触发特征。</span>
           </div>
           <div class="note">
-            <b>下一步</b>
-            <span>Evidence Orchestrator 会把 Top N 特征拆成并行取证任务，并保存证据包。</span>
+            <b>Agent Loop 接入点</b>
+            <span>Orchestrator 决定查什么、调什么、何时停。</span>
           </div>
         </div>`
       },
       {
         number: "03",
-        title: "Evidence Agents",
+        title: "Agent Loop / Evidence Orchestrator",
         wide: true,
         html: `
         <div class="node-header">
           <div>
             <div class="eyebrow"><span class="pulse"></span><span>步骤 03</span></div>
+            <h1>Agent Loop / Evidence Orchestrator</h1>
+            <p class="subtitle">把静态 alert 变成多轮闭环：plan → tool → observe → state → stop/review。</p>
+          </div>
+        </div>
+
+        <div class="node-body">
+          <section class="panel">
+            <div class="panel-title">
+              <span>运行循环</span>
+              <span class="tag">Plan / Act / Observe</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>Prepare context</b>
+                  <span>读取 alert、features、tools、observations 和 case state。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>Plan next action</b>
+                  <span>选择工具，并生成 tool_call 与 arguments。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>Execute controlled tool</b>
+                  <span>Harness 校验后执行，模型不直连数据库。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>Observe and update state</b>
+                  <span>写入 observation、evidence card、tool trace 和 state。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">05</span>
+                <div>
+                  <b>Continue / stop / human review</b>
+                  <span>证据足够进报告；不足继续查；高影响转人工。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span>Loop decision logic</span>
+              <span class="tag">动态控制</span>
+            </div>
+            <div class="frictions">
+              <div class="friction">
+                <b>Context package</b>
+                <span>alert、features、tools、evidence cards、case state。</span>
+              </div>
+              <div class="friction">
+                <b>Tool selection</b>
+                <span>五类受控工具；Python 只跑白名单分析。</span>
+              </div>
+              <div class="friction">
+                <b>State transition</b>
+                <span>pending / verified / missing / review / ready。</span>
+              </div>
+              <div class="friction">
+                <b>Stop condition</b>
+                <span>claim 可追溯才写报告；不足继续查；高影响转人工。</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="note-strip">
+          <div class="note">
+            <b>解决的问题</b>
+            <span>每一步由 observation 驱动。</span>
+          </div>
+          <div class="note">
+            <b>和普通 pipeline 的区别</b>
+            <span>Pipeline 固定；Agent Loop 动态调整。</span>
+          </div>
+          <div class="note">
+            <b>审计边界</b>
+            <span>只推进取证和报告，不做最终处置。</span>
+          </div>
+        </div>`
+      },
+      {
+        number: "04",
+        title: "Context Layer / Case Memory",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 04</span></div>
+            <h1>Context Layer / Case Memory</h1>
+            <p class="subtitle">把 alert、工具返回和 case state 压成每轮最小 context，避免凭记忆或全量明细判断。</p>
+          </div>
+        </div>
+
+        <div class="node-body is-single">
+          <section class="panel planner-card">
+            <div class="panel-title">
+              <span>Context package</span>
+              <span class="tag">Input + Controls</span>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <span class="step-number">01</span>
+                <div>
+                  <b>Alert package</b>
+                  <span>alert_id、account_id、risk_type、features、time window。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">02</span>
+                <div>
+                  <b>Available tools</b>
+                  <span>只注入本案允许的 tool schema。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">03</span>
+                <div>
+                  <b>Previous observations</b>
+                  <span>摘要、evidence ref、query_hash、tool_call_id、gaps。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">04</span>
+                <div>
+                  <b>Case state</b>
+                  <span>claim 状态与下一步 evidence gap。</span>
+                </div>
+              </div>
+            </div>
+            <div class="planner-steps">
+              <div class="planner-step">
+                <b>防止重复查证</b>
+                <span>已核验、已查询、空结果都进入 context。</span>
+              </div>
+              <div class="planner-step">
+                <b>限制敏感数据暴露</b>
+                <span>只给白名单摘要、样例行和引用。</span>
+              </div>
+              <div class="planner-step">
+                <b>减少上下文漂移</b>
+                <span>每轮从 case_store 重建，不靠长对话记忆。</span>
+              </div>
+              <div class="planner-step">
+                <b>保证报告可追溯</b>
+                <span>报告只能引用 context 中已有证据或 missing 标记。</span>
+              </div>
+            </div>
+          </section>
+        </div>`
+      },
+      {
+        number: "05",
+        title: "Investigation Planner",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
+            <h1>Investigation Planner</h1>
+            <p class="subtitle">把风险假设转成调查计划：tool、target、expected evidence、stop condition。</p>
+          </div>
+        </div>
+
+        <div class="node-body is-single">
+          <section class="panel planner-card">
+            <div class="panel-title">
+              <span>Investigation plan</span>
+              <span class="tag">Tool + Evidence + Stop</span>
+            </div>
+
+            <div class="planner-flow">
+              <div class="planner-node is-input">
+                <small>Planner input</small>
+                <b>alert context</b>
+                <span>risk_type、features、account、window、tools、state。</span>
+              </div>
+              <div class="planner-arrow">→</div>
+              <div class="planner-node is-plan">
+                <small>Prioritized plan</small>
+                <b>choose the next evidence path</b>
+                <div class="planner-steps">
+                  <div class="planner-step">
+                    <b>Verify trigger features</b>
+                    <span>Database query 核验金额、次数、历史阈值。</span>
+                  </div>
+                  <div class="planner-step">
+                    <b>Expand graph only when needed</b>
+                    <span>对手方或共享设备可疑时再扩图。</span>
+                  </div>
+                  <div class="planner-step">
+                    <b>Bind policy and profile</b>
+                    <span>补规则、KYC、profile gap；不直接当结论。</span>
+                  </div>
+                  <div class="planner-step">
+                    <b>Run controlled analysis</b>
+                    <span>排序、时间线、阈值复算走 Python；冲突转人工。</span>
+                  </div>
+                </div>
+              </div>
+              <div class="planner-arrow">→</div>
+              <div class="planner-node is-output">
+                <small>Planner output</small>
+                <b>next action or stop</b>
+                <div class="planner-result">
+                  <div class="planner-result-line"><i></i><span>输出 tool_call、arguments、expected evidence。</span></div>
+                  <div class="planner-result-line is-review"><i></i><span>证据不足或越权：missing-evidence / human review。</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>`
+      },
+      {
+        number: "06",
+        title: "Guardrails / Permission Boundary",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 06</span></div>
+            <h1>Guardrails / Permission Boundary</h1>
+            <p class="subtitle">所有 tool_call 先过 schema、权限、数据范围、成本和人工边界校验。</p>
+          </div>
+        </div>
+
+        <div class="node-body is-single">
+          <section class="panel guardrail-gate">
+            <div class="panel-title">
+              <span>Tool call gate</span>
+              <span class="tag">Before execution</span>
+            </div>
+
+            <div class="gate-flow">
+              <div class="gate-node is-input">
+                <small>Agent output</small>
+                <b>tool_call request</b>
+                <span>tool_name、arguments、case_id、account_id、window、reason。</span>
+              </div>
+              <div class="gate-arrow">→</div>
+              <div class="gate-node is-decision">
+                <small>Guardrail checks</small>
+                <b>validate before execution</b>
+                <div class="gate-checks">
+                  <div class="gate-check"><b>Schema</b><span>未知工具、缺字段、类型错即拒绝。</span></div>
+                  <div class="gate-check"><b>Permission</b><span>校验 role、tenant、case、risk_type。</span></div>
+                  <div class="gate-check"><b>Data scope</b><span>限制 account、window、row_limit、depth。</span></div>
+                  <div class="gate-check"><b>Template allowlist</b><span>Database query 只走 query_template_id。</span></div>
+                  <div class="gate-check"><b>Execution budget</b><span>限制 timeout、retry、token cost。</span></div>
+                  <div class="gate-check"><b>Human boundary</b><span>冻结、关闭、申报必须人工确认。</span></div>
+                </div>
+              </div>
+              <div class="gate-arrow">→</div>
+              <div class="gate-node is-output">
+                <small>Harness action</small>
+                <b>allow or block</b>
+                <div class="gate-result">
+                  <div class="gate-result-line"><i></i><span>通过：执行工具，写 observation、trace、evidence。</span></div>
+                  <div class="gate-result-line is-blocked"><i></i><span>拒绝：返回 blocked_reason，补证据或转人工。</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>`
+      },
+      {
+        number: "07",
+        title: "State / Case Store State Machine",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 07</span></div>
+            <h1>State / Case Store State Machine</h1>
+            <p class="subtitle">每次工具结果都写回 case_store；下一轮从状态机恢复，不靠对话记忆。</p>
+          </div>
+        </div>
+
+        <div class="node-body is-single">
+          <section class="panel planner-card state-card">
+            <div class="panel-title">
+              <span>Durable state machine</span>
+              <span class="tag">Case + Evidence + Resume</span>
+            </div>
+
+            <div class="planner-flow state-flow">
+              <div class="planner-node is-input">
+                <small>After tool execution</small>
+                <b>write case event</b>
+                <span>observation、evidence、trace、query ref、blocked_reason。</span>
+              </div>
+              <div class="planner-arrow">→</div>
+              <div class="planner-node is-plan">
+                <small>Case store state</small>
+                <b>update investigation progress</b>
+                <div class="planner-steps">
+                  <div class="planner-step">
+                    <b>Case state</b>
+                    <span>pending / investigating / missing / review / ready / closed。</span>
+                  </div>
+                  <div class="planner-step">
+                    <b>Claim state</b>
+                    <span>每个 claim 记录 status 与 evidence_card_ref。</span>
+                  </div>
+                  <div class="planner-step">
+                    <b>Loop memory</b>
+                    <span>记录已跑 query、空结果和证据冲突。</span>
+                  </div>
+                  <div class="planner-step">
+                    <b>Replay record</b>
+                    <span>state transition + hashes，支持恢复和回放。</span>
+                  </div>
+                </div>
+              </div>
+              <div class="planner-arrow">→</div>
+              <div class="planner-node is-output">
+                <small>Next route</small>
+                <b>continue, stop, or review</b>
+                <div class="planner-result">
+                  <div class="planner-result-line"><i></i><span>关键 claim verified：进入报告生成。</span></div>
+                  <div class="planner-result-line is-review"><i></i><span>不足、冲突或越权：继续补证或转人工。</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>`
+      },
+      {
+        number: "08",
+        title: "Evidence Agents",
+        wide: true,
+        html: `
+        <div class="node-header">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 08</span></div>
             <h1>Evidence Agents</h1>
-            <p class="subtitle">三个 sub-agent 分别核验金额、次数和历史阈值，统一输出 evidence card，并把查询、样例行、数据血缘和工具调用全部落盘。</p>
+            <p class="subtitle">Sub-agents 核验触发特征，统一输出 evidence card、query reference 和 tool trace。</p>
           </div>
         </div>
 
@@ -1097,48 +1693,42 @@
                 <div class="agent-head"><span>Sub-agent 1</span><span>金额</span></div>
                 <div class="agent-title">过去 12 小时交易额</div>
                 <p class="agent-claim">Feature 1: past_12h_amount_gt_50000</p>
-                <div class="agent-copy">核验过去 12 小时交易额是否真的超过 50,000，并拉取交易明细。</div>
+                <div class="agent-copy">核验 12 小时交易额与明细。</div>
                 <div class="agent-return">
                   <span>返回</span>
                   <b>total_amount</b>
-                  <b>逐笔金额</b>
-                  <b>timestamp</b>
-                  <b>direction</b>
-                  <b>counterparty</b>
+                  <b>sample rows</b>
+                  <b>query ref</b>
                 </div>
-                <div class="result-line">示例结论: 68,420 元，14 笔，超过 50,000。</div>
+                <div class="result-line">68,420 元，超过 50,000。</div>
               </article>
 
               <article class="agent-tile">
                 <div class="agent-head"><span>Sub-agent 2</span><span>次数</span></div>
                 <div class="agent-title">过去 12 小时交易次数</div>
                 <p class="agent-claim">Feature 2: past_12h_count_gt_12</p>
-                <div class="agent-copy">核验过去 12 小时交易次数是否超过 12，并返回每笔交易的时间、金额和渠道。</div>
+                <div class="agent-copy">核验 12 小时交易次数与渠道。</div>
                 <div class="agent-return">
                   <span>返回</span>
                   <b>transaction_count</b>
-                  <b>timestamp</b>
-                  <b>amount</b>
-                  <b>channel</b>
-                  <b>account_id</b>
+                  <b>window</b>
+                  <b>query ref</b>
                 </div>
-                <div class="result-line">示例结论: 14 笔，超过阈值 12 笔。</div>
+                <div class="result-line">14 笔，超过阈值 12。</div>
               </article>
 
               <article class="agent-tile">
                 <div class="agent-head"><span>Sub-agent 3</span><span>阈值</span></div>
                 <div class="agent-title">当前金额与历史阈值</div>
                 <p class="agent-claim">Feature 3: current_amount_gt_3x_baseline</p>
-                <div class="agent-copy">核验当前行为是否超过账户历史阈值 3 倍，并解释阈值计算方式。</div>
+                <div class="agent-copy">复算历史阈值与当前倍数。</div>
                 <div class="agent-return">
                   <span>返回</span>
-                  <b>historical_mean</b>
-                  <b>percentile</b>
-                  <b>baseline_method</b>
-                  <b>current_value</b>
+                  <b>baseline</b>
                   <b>ratio</b>
+                  <b>method</b>
                 </div>
-                <div class="result-line">示例结论: 当前值为历史阈值 3.4 倍。</div>
+                <div class="result-line">当前值为历史阈值 3.4 倍。</div>
               </article>
             </div>
           </section>
@@ -1151,28 +1741,23 @@
             <div class="schema-list">
               <div class="schema-row">
                 <b>feature_id, claim, status</b>
-                <span>past_12h_amount_gt_50000。过去 12 小时交易额超过 50,000。verified。</span>
-                <div class="schema-pills"><span class="schema-pill">feature_id</span><span class="schema-pill">claim</span><span class="schema-pill">status</span></div>
+                <span>feature_id、claim、verified/missing/conflict。</span>
+                <div class="schema-pills"><span class="schema-pill">feature_id</span><span class="schema-pill">status</span></div>
               </div>
               <div class="schema-row">
                 <b>summary, details</b>
-                <span>过去 12 小时总交易额为 68,420，超过阈值 50,000。details 存时间窗、总金额和交易次数。</span>
-                <div class="schema-pills"><span class="schema-pill">window_start</span><span class="schema-pill">window_end</span><span class="schema-pill">total_amount</span><span class="schema-pill">transaction_count</span></div>
+                <span>窗口、聚合值、阈值、交易次数。</span>
+                <div class="schema-pills"><span class="schema-pill">window</span><span class="schema-pill">value</span><span class="schema-pill">threshold</span></div>
               </div>
               <div class="schema-row">
-                <b>rows_sample</b>
-                <span>保留样例交易行，不只给结论。字段包括 timestamp、amount、direction、counterparty、channel。</span>
-                <div class="schema-pills"><span class="schema-pill">timestamp</span><span class="schema-pill">amount</span><span class="schema-pill">counterparty</span></div>
-              </div>
-              <div class="schema-row">
-                <b>data_lineage</b>
-                <span>记录 database、tables、columns、query_file、query hash、执行时间和返回行数。</span>
-                <div class="schema-pills"><span class="schema-pill">fraud_dw</span><span class="schema-pill">transactions</span><span class="schema-pill">queries/feature_01.sql</span></div>
+                <b>sample rows, lineage</b>
+                <span>样例行、tables、columns、query_file、query_hash。</span>
+                <div class="schema-pills"><span class="schema-pill">rows_sample</span><span class="schema-pill">query_hash</span></div>
               </div>
               <div class="schema-row">
                 <b>tool_trace_ref</b>
-                <span>Evidence card 记录 tool trace 引用，不存完整日志。字段包括 tool_call_id、agent_id、tool_name、input_hash、output_hash、duration_ms 和 status。</span>
-                <div class="schema-pills"><span class="schema-pill">tool_call_id</span><span class="schema-pill">tool_name</span><span class="schema-pill">input_hash</span><span class="schema-pill">output_hash</span></div>
+                <span>tool_call_id、tool_name、hashes、duration、status。</span>
+                <div class="schema-pills"><span class="schema-pill">tool_call_id</span><span class="schema-pill">hashes</span></div>
               </div>
             </div>
           </section>
@@ -1183,43 +1768,39 @@
             <b>Postgres JSONB</b>
             <div class="audit-lines">
               <div class="audit-line"><i></i><span>case_id, alert_id, account_id</span></div>
-              <div class="audit-line"><i></i><span>risk_score, risk_type, status</span></div>
-              <div class="audit-line"><i></i><span>evidence_uri, query_uri, version</span></div>
-              <div class="audit-line"><i></i><span>tool_trace_id, audit_log_uri</span></div>
+              <div class="audit-line"><i></i><span>status, evidence_uri, version</span></div>
+              <div class="audit-line"><i></i><span>query_ref, tool_trace_id</span></div>
             </div>
           </div>
           <div class="artifact-card">
             <b>S3 / MinIO Object Storage</b>
             <pre class="storage-tree">s3://fraud-case-store/alert_12345/
   manifest.json
-  evidence/feature_01_past_12h_amount.json
-  evidence/feature_02_past_12h_count.json
-  evidence/feature_03_baseline_ratio.json
-  queries/feature_01.sql
-  queries/feature_02.sql
-  queries/feature_03.sql
+  evidence/feature_01.json
+  evidence/feature_02.json
+  evidence/feature_03.json
+  queries/*.sql
   audit/tool_calls.jsonl</pre>
           </div>
           <div class="artifact-card">
             <b>Append-only Audit Log</b>
             <div class="audit-lines">
               <div class="audit-line"><i></i><span>tool_calls.jsonl</span></div>
-              <div class="audit-line"><i></i><span>query_hash, row_count, duration_ms</span></div>
-              <div class="audit-line"><i></i><span>agent_id, tool_name, status, error</span></div>
+              <div class="audit-line"><i></i><span>query_hash, duration_ms, status</span></div>
               <div class="audit-line"><i></i><span>input_hash, output_hash, retry_count</span></div>
             </div>
           </div>
         </div>`
       },
       {
-        number: "04",
-        title: "Report Draft Agent",
+        number: "09",
+        title: "Report Generation Agent",
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 04</span></div>
-            <h1>Report Draft Agent</h1>
-            <p class="subtitle">读取 case_store 里的 evidence cards，不直接查库，把已核验证据、交易时间线、合理解释和缺失证据写成可复核的调查报告初稿，最终决定权保留给 Investigator。</p>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 09</span></div>
+            <h1>Report Generation Agent</h1>
+            <p class="subtitle">只读 case_store，不直连数据库；把证据、时间线、gap 和建议写成可复核报告。</p>
           </div>
           <div class="meter">
             <small>平均 workflow</small>
@@ -1227,157 +1808,102 @@
           </div>
         </div>
 
-        <div class="node-body">
-          <section class="panel">
+        <div class="node-body is-single">
+          <section class="panel planner-card">
             <div class="panel-title">
-              <span>报告生成链路</span>
-              <span class="tag">只读证据包</span>
+              <span>Report package</span>
+              <span class="tag">Evidence-only output</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
                   <b>读取 case_store</b>
-                  <span>读取 manifest.json、三个 evidence card、query_file 引用和 tool_calls.jsonl，不直接访问原始数据库。</span>
+                  <span>读取 manifest、evidence cards、query refs、tool trace。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
                   <b>生成交易时间线</b>
-                  <span>把过去 12 小时的交易金额、次数、方向、渠道和交易对手方按时间排序，形成 investigator 可读时间线。</span>
+                  <span>按时间排列金额、次数、方向、渠道和对手方。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
                   <b>区分证据状态</b>
-                  <span>把每个 claim 标成已核验、缺失证据或需要人工确认，避免报告把不确定信息写成确定结论。</span>
+                  <span>verified / missing / human review 明确分开。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
-                  <b>生成报告初稿</b>
-                  <span>输出风险摘要、已核验证据、合理解释、缺失证据和建议处置路径，但不自动关闭案件或触发升级。</span>
+                  <b>生成调查报告</b>
+                  <span>输出摘要、证据、解释、gap 和建议；不做处置。</span>
                 </div>
               </div>
-              <div class="step">
-                <span class="step-number">05</span>
-                <div>
-                  <b>Investigator 最终审核</b>
-                  <span>如果处置会带来重大影响，例如冻结账户、升级复核、提交可疑活动报告或影响客户关系，Agent 只能给出建议，最终决定由 Investigator 作出。</span>
-                </div>
+            </div>
+            <div class="planner-steps">
+              <div class="planner-step">
+                <b>示例风险摘要</b>
+                <span>68,420 元、14 笔、历史阈值 3.4 倍。</span>
+              </div>
+              <div class="planner-step">
+                <b>已核验证据</b>
+                <span>feature_01、feature_02、feature_03 均已核验。</span>
+              </div>
+              <div class="planner-step">
+                <b>缺失证据</b>
+                <span>KYC、受益人、历史相似案件仍是 gap。</span>
+              </div>
+              <div class="planner-step">
+                <b>人工决定权</b>
+                <span>冻结、升级、申报等处置由 Investigator 决定。</span>
               </div>
             </div>
           </section>
-
-          <section class="panel">
-            <div class="panel-title">
-              <span>示例报告</span>
-              <span class="tag">报告片段</span>
-            </div>
-            <div class="timeline">
-              <div class="step">
-                <span class="step-number">01</span>
-                <div>
-                  <b>风险摘要</b>
-                  <span>账户在过去 12 小时内交易额 68,420 元，共 14 笔，超过金额阈值和次数阈值，并高于账户历史阈值 3.4 倍。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">02</span>
-                <div>
-                  <b>已核验证据</b>
-                  <span>金额、次数和历史阈值三项 claim 均已由 evidence card 核验，引用 feature_01、feature_02、feature_03。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">03</span>
-                <div>
-                  <b>合理解释</b>
-                  <span>目前未发现工资入账、定期投资或已知大额付款计划可以解释该 12 小时交易集中行为。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>缺失证据与建议</b>
-                  <span>KYC 最新状态、交易对手方受益人信息和历史相似案件尚未完成核验。建议人工补查后决定是否升级。</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div class="note-strip">
-          <div class="note">
-            <b>报告结构</b>
-            <span>风险摘要、交易时间线、已核验证据、合理解释、缺失证据、建议处置路径和引用链接。</span>
-          </div>
-          <div class="note">
-            <b>审计原则</b>
-            <span>报告里每个结论都要能回到 evidence card、query_file、query hash 或明确标成缺失证据。</span>
-          </div>
-          <div class="note">
-            <b>人工决定权</b>
-            <span>高影响处置必须 human-in-the-loop。Agent 负责证据、解释和建议，不拥有最终处置权限。</span>
-          </div>
         </div>`
       },
       {
-        number: "05",
+        number: "10",
         title: "SFT / RLVR / RLHF 反馈闭环",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 10</span></div>
             <h1>SFT / RLVR / RLHF 反馈闭环</h1>
-            <p class="subtitle">SFT 冷启动高质量 tool-use trajectory，RLVR 用可验证奖励优化轨迹正确性，RLHF 对齐资深 Investigator 的审计偏好和风险边界。</p>
+            <p class="subtitle">训练闭环分别优化 Planner 的下一步选择、Guardrails/Evidence/State 的可验证正确性，以及 Investigator 认可的报告判断。</p>
           </div>
         </div>
 
         <div class="node-body is-three">
           <section class="panel">
             <div class="panel-title">
-              <span>SFT: 从历史案件学习标准调查轨迹</span>
-              <span class="tag">模仿好轨迹</span>
+              <span>SFT → Planner behavior</span>
+              <span class="tag">Imitation</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
-                  <b>学习输入组织</b>
-                  <span>使用经过权限过滤和脱敏处理的告警摘要、风险类型、Top N features、可用工具列表、表结构摘要和政策引用，不直接训练原始客户明细。</span>
+                  <b>Next action policy</b>
+                  <span>从 context 学下一步：查库、扩图、取 policy/profile、跑 Python、停止或转人工。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
-                  <b>学习工具选择</b>
-                  <span>模型学习不同风险信号下该调用哪个工具，例如交易查询、KYC 查询、设备查询、Graph 查询、policy RAG 或历史案件检索。</span>
+                  <b>Argument filling</b>
+                  <span>学习 account_id、window、feature_id、query_template_id、threshold、depth、row_limit。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
-                  <b>学习参数构造</b>
-                  <span>模型学习如何根据告警上下文填写 account_id、window_start、window_end、feature_id、query_template_id、tables、columns 和 threshold。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>学习证据构造</b>
-                  <span>工具返回结果后，模型学习生成 summary、details、rows_sample、data_lineage、tool_trace_ref 和缺失证据说明。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">05</span>
-                <div>
-                  <b>学习报告与 summary 风格</b>
-                  <span>最终训练目标是人工认可后的调查计划、证据引用结构、风险摘要、合理解释、建议路径和 draft report，并学习言简意赅、可审计的 summary 风格。</span>
+                  <b>Stop / missing signal</b>
+                  <span>学习何时继续补证、何时输出 missing-evidence、何时进入 ready_for_report。</span>
                 </div>
               </div>
             </div>
@@ -1385,43 +1911,29 @@
 
           <section class="panel">
             <div class="panel-title">
-              <span>RLVR 如何训练 trajectory</span>
-              <span class="tag">可验证奖励</span>
+              <span>RLVR → Guardrails / Evidence / State</span>
+              <span class="tag">Verifiable reward</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
-                  <b>验证 tool choice</b>
-                  <span>奖励正确选择交易查询、KYC、设备、Graph、policy RAG 等工具，惩罚跳过关键证据或调用无关工具。</span>
+                  <b>Guardrail pass</b>
+                  <span>奖励合法 schema、权限范围、query_template、budget 和 human boundary。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
-                  <b>验证 tool arguments</b>
-                  <span>检查 account_id、时间窗口、feature_id、query_template_id、tables、columns 和 threshold 是否和告警上下文一致。</span>
+                  <b>Evidence correctness</b>
+                  <span>奖励 query 可执行、计算可复算、evidence card 可追溯。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
-                  <b>验证 query 与计算</b>
-                  <span>SQL 必须可执行，表字段正确，时间窗正确，金额、次数、row_count 和 threshold ratio 能被机械复算。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>验证 evidence card</b>
-                  <span>schema 必须合法，claim、status、summary、rows_sample、data_lineage 和 tool_trace_ref 都要完整可回溯。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">05</span>
-                <div>
-                  <b>验证端到端完成</b>
-                  <span>从 Top N features 到 evidence cards 再到 draft report，每个结论都必须能追溯到 query、tool trace 和原始数据。</span>
+                  <b>State transition</b>
+                  <span>奖励正确更新 claim status、避免重复 query、保留 replay record。</span>
                 </div>
               </div>
             </div>
@@ -1429,36 +1941,29 @@
 
           <section class="panel">
             <div class="panel-title">
-              <span>RLHF 如何塑造 Agent 行为</span>
-              <span class="tag">Human preference</span>
+              <span>RLHF → Review judgment</span>
+              <span class="tag">Expert preference</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
-                  <b>定义审计偏好</b>
-                  <span>把资深 Investigator 对好报告、好证据链、好 tool trace 和好处置建议的判断，转成可学习的偏好信号。</span>
+                  <b>Report usefulness</b>
+                  <span>学习更清楚、更短、更适合 Investigator 复核的报告结构。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
-                  <b>约束风险边界</b>
-                  <span>奖励谨慎、不越权、能承认缺失证据的 Agent 行为，惩罚过度自信、跳过查证、替代 Investigator 决策的输出。</span>
+                  <b>Risk wording</b>
+                  <span>学习“高度可疑 / 需进一步核验 / 证据不足”的措辞边界。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
-                  <b>优化端到端 workflow</b>
-                  <span>偏好不只看最终文本，也看 tool choice、tool arguments、query 可复核性、证据覆盖率、summary 清晰度和建议路径。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>沉淀组织判断</b>
-                  <span>每次人工复核都会把银行内部的风险口径、升级标准和报告偏好沉淀下来，让 Agent 随业务和监管变化持续对齐。</span>
+                  <b>Escalation preference</b>
+                  <span>学习何时建议升级、何时保留人工复核，不能替代最终处置。</span>
                 </div>
               </div>
             </div>
@@ -1467,28 +1972,28 @@
 
         <div class="note-strip">
           <div class="note">
-            <b>当前案例的输入</b>
-            <span>Alert、Top N features、账户窗口、表结构、tool calls、tool arguments、queries、rows_sample、evidence cards、data_lineage 和人工修改都进入训练样本。</span>
+            <b>SFT</b>
+            <span>优化 Planner：next action、arguments、stop/missing。</span>
           </div>
           <div class="note">
-            <b>当前案例的输出</b>
-            <span>输出不是最终处置，而是调查计划、可复核证据引用、缺失证据说明、建议路径和 draft report。</span>
+            <b>RLVR</b>
+            <span>优化可验证行为：guardrail pass、evidence correctness、state transition。</span>
           </div>
           <div class="note">
-            <b>训练价值</b>
-            <span>让模型模仿资深调查员从 alert 到 tool calls、evidence cards、draft report 的完整标准轨迹，再用 RLVR 验证走得对不对，用 RLHF 对齐审计偏好。</span>
+            <b>RLHF</b>
+            <span>优化人审体验：报告可读性、风险措辞、升级偏好。</span>
           </div>
         </div>`
       },
       {
-        number: "06",
+        number: "11",
         title: "Agent 自动化评估体系",
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 06</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 11</span></div>
             <h1>Agent 自动化评估体系</h1>
-            <p class="subtitle">用历史已复核案件和标准答案回放整条 workflow，验证 Evidence Agents、Report Draft Agent 和最终复核包是否准确、稳定、可复核，并检查 Agent 是否越过人工决策边界。</p>
+            <p class="subtitle">用历史复核案件回放 workflow，验证准确性、鲁棒性、可追溯性和人工边界。</p>
           </div>
         </div>
 
@@ -1503,28 +2008,28 @@
                 <span class="step-number">01</span>
                 <div>
                   <b>构建黄金评估集</b>
-                  <span>从已完成复核的 alert 中抽样，保留告警信息、Top N 触发特征、人工核验证据、最终报告和处置结论。</span>
+                  <span>保留 alert、features、人工证据、报告和处置结论。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
                   <b>回放完整 workflow</b>
-                  <span>同一批 alert 重新跑 Evidence Agents、case_store 写入和 Report Draft Agent，生成新的 evidence cards 与报告初稿。</span>
+                  <span>重跑 Evidence、case_store 和 Report Generation。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
                   <b>对齐标准答案</b>
-                  <span>把 Agent 输出和人工标准答案比较，检查金额、次数、时间窗、交易方向、引用证据和缺失证据标注。</span>
+                  <span>对比金额、次数、窗口、方向、引用和 missing 标注。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
                   <b>生成评估报告</b>
-                  <span>输出每个 Agent、每类风险、每种失败原因的指标，定位是查询错误、证据缺失、推理错误、报告措辞问题还是越权决策。</span>
+                  <span>按 Agent、风险类型、失败原因输出指标。</span>
                 </div>
               </div>
             </div>
@@ -1540,28 +2045,28 @@
                 <span class="step-number">01</span>
                 <div>
                   <b>准确性</b>
-                  <span>SQL 是否查对表、字段和时间窗，evidence card 的金额、次数、row_count、data_lineage 是否和人工核验一致。</span>
+                  <span>SQL、字段、窗口、金额、row_count 与人工一致。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
                   <b>鲁棒性</b>
-                  <span>遇到缺字段、查询超时、KYC 过期、交易对手方缺失或证据冲突时，Agent 是否稳定降级并标注不确定性。</span>
+                  <span>缺字段、超时、KYC 过期、证据冲突时可稳定降级。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
                   <b>复杂任务完成率</b>
-                  <span>从 alert 到 evidence cards、报告初稿、复核包的端到端跑通率，以及是否在目标审计时限内完成。</span>
+                  <span>alert → evidence → report → review package 的跑通率。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
                   <b>决策边界</b>
-                  <span>检查 Agent 是否只输出证据、解释和建议，不能自动关闭案件、冻结账户、提交申报或替代 Investigator 做最终决定。</span>
+                  <span>只输出证据、解释和建议，不做最终处置。</span>
                 </div>
               </div>
             </div>
@@ -1571,274 +2076,162 @@
         <div class="note-strip">
           <div class="note">
             <b>当前案例怎么评估</b>
-            <span>检查三个触发特征是否都被正确核验，68,420 元、14 笔、3.4 倍历史阈值是否能回到查询结果。</span>
+            <span>68,420 元、14 笔、3.4 倍是否可追溯。</span>
           </div>
           <div class="note">
             <b>失败样本沉淀</b>
-            <span>失败案例进入错误分类，区分查询失败、证据不全、推理错误、报告引用错误和越权决策。</span>
+            <span>失败样本按查询、证据、推理、引用、越权分类。</span>
           </div>
           <div class="note">
             <b>上线门槛</b>
-            <span>只有在黄金评估集上通过准确性、鲁棒性、完成率和人工决策边界门槛，Agent 才进入下一轮灰度。</span>
+            <span>通过准确性、鲁棒性、完成率和边界门槛再灰度。</span>
           </div>
         </div>`
       },
       {
-        number: "07",
+        number: "12",
         title: "MLOps 与生产可靠性",
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 07</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 12</span></div>
             <h1>MLOps 与生产可靠性</h1>
-            <p class="subtitle">当 workflow 进入生产环境，需要同时管理 ML pipeline、Agent 工具链、数据库依赖和审计日志，确保告警不中断、证据不丢失、失败可回滚。</p>
+            <p class="subtitle">生产关注四件事：监控、降级、回滚、审计完整性。</p>
           </div>
         </div>
 
-        <div class="node-body">
-          <section class="panel">
+        <div class="node-body is-single">
+          <section class="panel planner-card">
             <div class="panel-title">
-              <span>生产监控</span>
-              <span class="tag">持续观测</span>
+              <span>Production reliability</span>
+              <span class="tag">Monitor + Fallback + Rollback</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
                   <b>数据质量监控</b>
-                  <span>监控实时交易流水、账户画像、设备记录和图数据的延迟、缺失率、字段范围、schema 变更、特征新鲜度、数据漂移（data drift）和特征漂移（feature drift）。</span>
+                  <span>延迟、缺失率、schema、特征新鲜度、data/feature drift。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
                   <b>模型健康监控</b>
-                  <span>跟踪 anomaly score、graph risk score、风险类型分布、阈值命中率、特征漂移和延迟标签回流表现。</span>
+                  <span>score 分布、risk_type、阈值命中率、标签回流。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
                   <b>Weekly model retraining</b>
-                  <span>每周基于延迟标签、人工复核结果和最新数据快照重训 AutoEncoder / Graph Model，通过评估门槛后才发布新版本。</span>
+                  <span>延迟标签 + 人审结果 + 数据快照，过评估再发布。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
-                  <b>训练服务一致性</b>
-                  <span>避免 training-serving skew，确保训练特征、线上特征、预处理逻辑、缺失值策略、时间窗口和模型版本在 serving path 中完全一致。</span>
+                  <b>Agent 运行监控</b>
+                  <span>tool 成功率、SQL timeout、queue、p95、cost、退回率。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">05</span>
                 <div>
-                  <b>Agent 运行监控</b>
-                  <span>监控工具调用成功率、SQL 超时率、队列深度、p95 延迟、token 成本、报告生成失败率和人工退回率。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">06</span>
-                <div>
                   <b>审计日志监控</b>
-                  <span>检查 tool_calls.jsonl、query hash、model version、prompt version 和 evidence card version 是否完整写入。</span>
+                  <span>trace、query_hash、model/prompt/evidence version 完整。</span>
                 </div>
+              </div>
+            </div>
+            <div class="planner-steps">
+              <div class="planner-step">
+                <b>Fallback 路径</b>
+                <span>异常时回退到规则、人工队列、稳定模型或只读查询。</span>
+              </div>
+              <div class="planner-step">
+                <b>版本回滚</b>
+                <span>记录模型、prompt、工具、数据快照，灰度失败即回滚。</span>
+              </div>
+              <div class="planner-step">
+                <b>数据库灾备</b>
+                <span>交易库、case_store、对象存储备份与恢复演练。</span>
+              </div>
+              <div class="planner-step">
+                <b>上线策略</b>
+                <span>shadow run → 小流量灰度 → 扩大覆盖。</span>
               </div>
             </div>
           </section>
-
-          <section class="panel">
-            <div class="panel-title">
-              <span>故障处理与灾备</span>
-              <span class="tag">Fail-safe</span>
-            </div>
-            <div class="timeline">
-              <div class="step">
-                <span class="step-number">01</span>
-                <div>
-                  <b>Fallback 路径</b>
-                  <span>LLM、模型服务或证据工具异常时，系统回退到规则告警、人工队列、上一个稳定模型或只读证据查询模式。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">02</span>
-                <div>
-                  <b>版本回滚</b>
-                  <span>每次上线记录模型版本、prompt 版本、工具版本、数据快照和配置，灰度失败时无需重新训练即可切回上一版。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">03</span>
-                <div>
-                  <b>数据库灾备</b>
-                  <span>交易库、case_store 和对象存储需要主从复制、定期备份、跨可用区恢复、RTO/RPO 指标和恢复演练。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>权限与应急手册</b>
-                  <span>生产工具按最小权限运行，密钥轮换、访问审计、告警升级、人工接管和事后复盘都有明确 runbook。</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div class="note-strip">
-          <div class="note">
-            <b>上线策略</b>
-            <span>先 shadow run，再小流量灰度，指标稳定后扩大覆盖；任何高影响处置仍保持 Investigator 最终决定权。</span>
-          </div>
-          <div class="note">
-            <b>生产指标</b>
-            <span>同时看业务指标、系统指标、模型指标和审计指标，避免只监控服务是否在线。</span>
-          </div>
-          <div class="note">
-            <b>灾备目标</b>
-            <span>核心要求是告警不漏、证据不丢、日志不可篡改、故障可降级、版本可回滚。</span>
-          </div>
         </div>`
       },
       {
-        number: "08",
+        number: "13",
         title: "模型运行方式",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 08</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 13</span></div>
             <h1>模型运行方式</h1>
-            <p class="subtitle">Agent Harness 不绑定单一模型来源，同一套工具调用、证据存储和审计日志，可以接 OpenAI / Claude API、自有 GPU 集群，也可以在客户只有 CPU 机器时运行轻量模型。</p>
+            <p class="subtitle">模型可替换；工具、状态、证据和审计协议保持不变。</p>
           </div>
         </div>
 
-        <div class="node-body is-three">
-          <section class="panel">
+        <div class="node-body is-single">
+          <section class="panel planner-card">
             <div class="panel-title">
-              <span>API 模式</span>
-              <span class="tag">OpenAI / Claude</span>
+              <span>Runtime abstraction</span>
+              <span class="tag">API / GPU / CPU</span>
+            </div>
+            <div class="planner-steps">
+              <div class="planner-step">
+                <b>API 模式</b>
+                <span>复杂报告、解释和 policy reasoning。</span>
+              </div>
+              <div class="planner-step">
+                <b>自有 GPU 集群模式</b>
+                <span>Qwen / DeepSeek 通过兼容接口接入 Harness。</span>
+              </div>
+              <div class="planner-step">
+                <b>CPU 机器模式</b>
+                <span>轻量模型承担低并发、批处理和夜间回放。</span>
+              </div>
+              <div class="planner-step">
+                <b>统一审计边界</b>
+                <span>prompt、model、tool_call、hashes 全部进 audit log。</span>
+              </div>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
-                  <b>调用托管模型 API</b>
-                  <span>Report Draft Agent、Reasoning Agent 或 Evidence Orchestrator 可以通过 API 调用 OpenAI 或 Claude。</span>
+                  <b>runtime_policy 选择后端</b>
+                  <span>按任务、敏感度、成本、延迟和合规选择后端。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
-                  <b>适合高质量推理</b>
-                  <span>适合复杂报告组织、自然语言解释、policy reasoning 和低维护成本的 PoC 阶段。</span>
+                  <b>工具与状态不随模型变化</b>
+                  <span>工具、case_store、evidence card、Guardrails 不变。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
-                  <b>Harness 负责边界</b>
-                  <span>API 模型只能通过受控 tool 接触 evidence card，不直接访问数据库或绕过权限。</span>
+                  <b>复杂推理可降级</b>
+                  <span>模型不可用时降级为模板、规则、只读查询或人工。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
-                  <b>审计记录一致</b>
-                  <span>无论调用 OpenAI 还是 Claude，prompt version、model name、tool call 和输出摘要都进入 audit log。</span>
+                  <b>架构价值</b>
+                  <span>业务能力不绑定模型供应商或硬件形态。</span>
                 </div>
               </div>
             </div>
           </section>
-
-          <section class="panel">
-            <div class="panel-title">
-              <span>自有 GPU 集群模式</span>
-              <span class="tag">Qwen / DeepSeek</span>
-            </div>
-            <div class="timeline">
-              <div class="step">
-                <span class="step-number">01</span>
-                <div>
-                  <b>开源模型私有部署</b>
-                  <span>Qwen、DeepSeek 等模型可以跑在银行自己的 GPU 集群中，适合数据出域敏感或成本可控的场景。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">02</span>
-                <div>
-                  <b>统一 OpenAI-compatible 接口</b>
-                  <span>通过 vLLM、TGI 或内部模型网关暴露 chat completions 接口，Agent Harness 上层不用改 workflow。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">03</span>
-                <div>
-                  <b>推理与工具隔离</b>
-                  <span>模型只生成计划、查询草稿或报告文本，真正查库、写证据包、写审计日志仍由受控工具执行。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>可按任务路由</b>
-                  <span>高敏数据走自有 GPU 或 CPU 模型，复杂语言报告可走 API 模型；路由策略记录在 runtime_policy。</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-title">
-              <span>CPU 机器模式</span>
-              <span class="tag">轻量模型</span>
-            </div>
-            <div class="timeline">
-              <div class="step">
-                <span class="step-number">01</span>
-                <div>
-                  <b>适合无 GPU 客户</b>
-                  <span>部分客户无法采购本地 GPU 集群，也无法使用云端 GPU，可以在普通 CPU 机器上部署轻量模型或量化模型。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">02</span>
-                <div>
-                  <b>承担同一套任务</b>
-                  <span>同样接入 Agent Harness，负责调查计划、SQL 草稿、证据摘要、报告初稿和规则化复核提示。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">03</span>
-                <div>
-                  <b>通过调度控制成本</b>
-                  <span>CPU 模式适合低并发、批处理、夜间回放和小模型任务；复杂推理可降级为模板、规则或人工队列。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>接口保持一致</b>
-                  <span>通过 llama.cpp、vLLM CPU backend 或内部模型网关暴露兼容接口，上层 workflow 不需要重写。</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div class="note-strip">
-          <div class="note">
-            <b>核心表达</b>
-            <span>Agent Harness 是 runtime abstraction，不是某个模型 API。模型可以替换，工具、状态和审计边界保持一致。</span>
-          </div>
-          <div class="note">
-            <b>runtime_policy</b>
-            <span>按任务类型、数据敏感度、成本、延迟和合规要求选择 OpenAI / Claude API、自有 GPU 模型或 CPU 轻量模型。</span>
-          </div>
-          <div class="note">
-            <b>架构价值</b>
-            <span>业务能力不绑定单一模型供应商或硬件形态，Agent Harness 支持 API、GPU、CPU 三类后端和同一套可审计工具链。</span>
-          </div>
         </div>`
       },
 

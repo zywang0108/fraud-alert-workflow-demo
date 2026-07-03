@@ -1,6 +1,6 @@
 # Fraud Alert Agent Workflow Demo
 
-Static demo site for a bank fraud alert audit workflow. The page walks through the current manual audit flow, ML alert generation, Evidence Agents, report drafting, SFT/RLVR/RLHF feedback, evaluation, MLOps, and model runtime options.
+Static site for a bank fraud alert audit workflow. The page walks through the current manual audit flow, ML alert generation, Evidence Agents, report generation, SFT/RLVR/RLHF feedback, evaluation, MLOps, and model runtime options.
 
 ## Preview locally
 
