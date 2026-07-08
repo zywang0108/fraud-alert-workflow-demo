@@ -1495,34 +1495,34 @@
       },
       {
         number: "05",
-        title: "Investigation Planner",
+        title: "Evidence Router",
         wide: true,
         html: `
         <div class="node-header">
           <div>
             <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
-            <h1>Investigation Planner</h1>
-            <p class="subtitle">把风险假设转成调查计划：tool、target、expected evidence、stop condition。</p>
+            <h1>Evidence Router</h1>
+            <p class="subtitle">决定下一张 evidence card 要证明什么：tool、target、expected evidence、stop condition。</p>
           </div>
         </div>
 
         <div class="node-body is-single">
           <section class="panel planner-card">
             <div class="panel-title">
-              <span>Investigation plan</span>
+              <span>Evidence routing plan</span>
               <span class="tag">Tool + Evidence + Stop</span>
             </div>
 
             <div class="planner-flow">
               <div class="planner-node is-input">
-                <small>Planner input</small>
+                <small>Router input</small>
                 <b>alert context</b>
                 <span>risk_type、features、account、window、tools、state。</span>
               </div>
               <div class="planner-arrow">→</div>
               <div class="planner-node is-plan">
-                <small>Prioritized plan</small>
-                <b>choose the next evidence path</b>
+                <small>Prioritized evidence route</small>
+                <b>choose what the next evidence card proves</b>
                 <div class="planner-steps">
                   <div class="planner-step">
                     <b>Verify trigger features</b>
@@ -1544,11 +1544,11 @@
               </div>
               <div class="planner-arrow">→</div>
               <div class="planner-node is-output">
-                <small>Planner output</small>
+                <small>Router output</small>
                 <b>next action or stop</b>
                 <div class="planner-result">
-                  <div class="planner-result-line"><i></i><span>输出 tool_call、arguments、expected evidence。</span></div>
-                  <div class="planner-result-line is-review"><i></i><span>证据不足或越权：missing-evidence / human review。</span></div>
+                  <div class="planner-result-line"><i></i><span>输出 tool_call、arguments、expected evidence、stop condition。</span></div>
+                  <div class="planner-result-line is-review"><i></i><span>证据弱、缺失或越权：missing-evidence / human review。</span></div>
                 </div>
               </div>
             </div>
@@ -1874,14 +1874,14 @@
           <div>
             <div class="eyebrow"><span class="pulse"></span><span>步骤 10</span></div>
             <h1>SFT / RLVR / RLHF 反馈闭环</h1>
-            <p class="subtitle">训练闭环分别优化 Planner 的下一步选择、Guardrails/Evidence/State 的可验证正确性，以及 Investigator 认可的报告判断。</p>
+            <p class="subtitle">训练闭环分别优化 Evidence Router 的取证路径选择、Guardrails/Evidence/State 的可验证正确性，以及 Investigator 认可的报告判断。</p>
           </div>
         </div>
 
         <div class="node-body is-three">
           <section class="panel">
             <div class="panel-title">
-              <span>SFT → Planner behavior</span>
+              <span>SFT → Evidence Router behavior</span>
               <span class="tag">Imitation</span>
             </div>
             <div class="timeline">
@@ -1973,7 +1973,7 @@
         <div class="note-strip">
           <div class="note">
             <b>SFT</b>
-            <span>优化 Planner：next action、arguments、stop/missing。</span>
+            <span>优化 Evidence Router：tool selection、arguments、stop/missing。</span>
           </div>
           <div class="note">
             <b>RLVR</b>
