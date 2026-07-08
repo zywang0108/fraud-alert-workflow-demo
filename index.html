@@ -1326,54 +1326,61 @@
       },
       {
         number: "03",
-        title: "Agent Loop / Evidence Orchestrator",
+        title: "LangGraph-style Agent Loop",
         wide: true,
         html: `
         <div class="node-header">
           <div>
             <div class="eyebrow"><span class="pulse"></span><span>步骤 03</span></div>
-            <h1>Agent Loop / Evidence Orchestrator</h1>
-            <p class="subtitle">把静态 alert 变成多轮闭环：plan → tool → observe → state → stop/review。</p>
+            <h1>LangGraph-style Agent Loop</h1>
+            <p class="subtitle">把 alert 跑成可恢复 StateGraph：context → route evidence → guardrail → tool → observe → state → stop/review。</p>
           </div>
         </div>
 
         <div class="node-body">
           <section class="panel">
             <div class="panel-title">
-              <span>运行循环</span>
-              <span class="tag">Plan / Act / Observe</span>
+              <span>StateGraph nodes</span>
+              <span class="tag">Route / Tool / State</span>
             </div>
             <div class="timeline">
               <div class="step">
                 <span class="step-number">01</span>
                 <div>
-                  <b>Prepare context</b>
+                  <b>Load context</b>
                   <span>读取 alert、features、tools、observations 和 case state。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">02</span>
                 <div>
-                  <b>Plan next action</b>
-                  <span>选择工具，并生成 tool_call 与 arguments。</span>
+                  <b>Evidence Router</b>
+                  <span>决定下一张 evidence card 要证明什么，并生成 tool_call。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">03</span>
                 <div>
-                  <b>Execute controlled tool</b>
-                  <span>Harness 校验后执行，模型不直连数据库。</span>
+                  <b>Guardrail gate</b>
+                  <span>schema、权限、范围、budget 和人工边界先校验。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">04</span>
                 <div>
-                  <b>Observe and update state</b>
-                  <span>写入 observation、evidence card、tool trace 和 state。</span>
+                  <b>Execute controlled tool</b>
+                  <span>Database / profile / graph / policy / Python 受控执行。</span>
                 </div>
               </div>
               <div class="step">
                 <span class="step-number">05</span>
+                <div>
+                  <b>Write evidence and state</b>
+                  <span>写入 observation、evidence card、tool trace 和 case_store。</span>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-number">06</span>
                 <div>
                   <b>Continue / stop / human review</b>
                   <span>证据足够进报告；不足继续查；高影响转人工。</span>
@@ -1384,25 +1391,25 @@
 
           <section class="panel">
             <div class="panel-title">
-              <span>Loop decision logic</span>
-              <span class="tag">动态控制</span>
+              <span>Evidence routing node</span>
+              <span class="tag">What to prove next</span>
             </div>
             <div class="frictions">
               <div class="friction">
-                <b>Context package</b>
-                <span>alert、features、tools、evidence cards、case state。</span>
+                <b>Feature trigger</b>
+                <span>金额、次数、阈值异常优先走 Database query。</span>
               </div>
               <div class="friction">
-                <b>Tool selection</b>
-                <span>五类受控工具；Python 只跑白名单分析。</span>
+                <b>Counterparty clue</b>
+                <span>新对手方、共享设备、二跳资金流再扩图。</span>
               </div>
               <div class="friction">
-                <b>State transition</b>
-                <span>pending / verified / missing / review / ready。</span>
+                <b>Profile / policy gap</b>
+                <span>KYC、baseline、AML 条款不足时补 profile / policy。</span>
               </div>
               <div class="friction">
-                <b>Stop condition</b>
-                <span>claim 可追溯才写报告；不足继续查；高影响转人工。</span>
+                <b>Weak or conflicting evidence</b>
+                <span>写 missing-evidence 或转 human review，不继续瞎查。</span>
               </div>
             </div>
           </section>
@@ -1411,7 +1418,7 @@
         <div class="note-strip">
           <div class="note">
             <b>解决的问题</b>
-            <span>每一步由 observation 驱动。</span>
+            <span>Evidence Router 不再单列；作为 Agent Loop 的 routing node。</span>
           </div>
           <div class="note">
             <b>和普通 pipeline 的区别</b>
@@ -1495,74 +1502,12 @@
       },
       {
         number: "05",
-        title: "Evidence Router",
-        wide: true,
-        html: `
-        <div class="node-header">
-          <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
-            <h1>Evidence Router</h1>
-            <p class="subtitle">决定下一张 evidence card 要证明什么：tool、target、expected evidence、stop condition。</p>
-          </div>
-        </div>
-
-        <div class="node-body is-single">
-          <section class="panel planner-card">
-            <div class="panel-title">
-              <span>Evidence routing plan</span>
-              <span class="tag">Tool + Evidence + Stop</span>
-            </div>
-
-            <div class="planner-flow">
-              <div class="planner-node is-input">
-                <small>Router input</small>
-                <b>alert context</b>
-                <span>risk_type、features、account、window、tools、state。</span>
-              </div>
-              <div class="planner-arrow">→</div>
-              <div class="planner-node is-plan">
-                <small>Prioritized evidence route</small>
-                <b>choose what the next evidence card proves</b>
-                <div class="planner-steps">
-                  <div class="planner-step">
-                    <b>Verify trigger features</b>
-                    <span>Database query 核验金额、次数、历史阈值。</span>
-                  </div>
-                  <div class="planner-step">
-                    <b>Expand graph only when needed</b>
-                    <span>对手方或共享设备可疑时再扩图。</span>
-                  </div>
-                  <div class="planner-step">
-                    <b>Bind policy and profile</b>
-                    <span>补规则、KYC、profile gap；不直接当结论。</span>
-                  </div>
-                  <div class="planner-step">
-                    <b>Run controlled analysis</b>
-                    <span>排序、时间线、阈值复算走 Python；冲突转人工。</span>
-                  </div>
-                </div>
-              </div>
-              <div class="planner-arrow">→</div>
-              <div class="planner-node is-output">
-                <small>Router output</small>
-                <b>next action or stop</b>
-                <div class="planner-result">
-                  <div class="planner-result-line"><i></i><span>输出 tool_call、arguments、expected evidence、stop condition。</span></div>
-                  <div class="planner-result-line is-review"><i></i><span>证据弱、缺失或越权：missing-evidence / human review。</span></div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>`
-      },
-      {
-        number: "06",
         title: "Guardrails / Permission Boundary",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 06</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
             <h1>Guardrails / Permission Boundary</h1>
             <p class="subtitle">所有 tool_call 先过 schema、权限、数据范围、成本和人工边界校验。</p>
           </div>
@@ -1608,13 +1553,13 @@
         </div>`
       },
       {
-        number: "07",
+        number: "06",
         title: "State / Case Store State Machine",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 07</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 06</span></div>
             <h1>State / Case Store State Machine</h1>
             <p class="subtitle">每次工具结果都写回 case_store；下一轮从状态机恢复，不靠对话记忆。</p>
           </div>
@@ -1670,13 +1615,13 @@
         </div>`
       },
       {
-        number: "08",
+        number: "07",
         title: "Evidence Agents",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 08</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 07</span></div>
             <h1>Evidence Agents</h1>
             <p class="subtitle">Sub-agents 核验触发特征，统一输出 evidence card、query reference 和 tool trace。</p>
           </div>
@@ -1793,12 +1738,12 @@
         </div>`
       },
       {
-        number: "09",
+        number: "08",
         title: "Report Generation Agent",
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 09</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 08</span></div>
             <h1>Report Generation Agent</h1>
             <p class="subtitle">只读 case_store，不直连数据库；把证据、时间线、gap 和建议写成可复核报告。</p>
           </div>
@@ -1866,22 +1811,22 @@
         </div>`
       },
       {
-        number: "10",
+        number: "09",
         title: "SFT / RLVR / RLHF 反馈闭环",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 10</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 09</span></div>
             <h1>SFT / RLVR / RLHF 反馈闭环</h1>
-            <p class="subtitle">训练闭环分别优化 Evidence Router 的取证路径选择、Guardrails/Evidence/State 的可验证正确性，以及 Investigator 认可的报告判断。</p>
+            <p class="subtitle">训练闭环分别优化 Agent Loop 的取证路由、Guardrails/Evidence/State 的可验证正确性，以及 Investigator 认可的报告判断。</p>
           </div>
         </div>
 
         <div class="node-body is-three">
           <section class="panel">
             <div class="panel-title">
-              <span>SFT → Evidence Router behavior</span>
+              <span>SFT → Agent Loop routing</span>
               <span class="tag">Imitation</span>
             </div>
             <div class="timeline">
@@ -1973,7 +1918,7 @@
         <div class="note-strip">
           <div class="note">
             <b>SFT</b>
-            <span>优化 Evidence Router：tool selection、arguments、stop/missing。</span>
+            <span>优化 routing node：tool selection、arguments、stop/missing。</span>
           </div>
           <div class="note">
             <b>RLVR</b>
@@ -1986,12 +1931,12 @@
         </div>`
       },
       {
-        number: "11",
+        number: "10",
         title: "Agent 自动化评估体系",
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 11</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 10</span></div>
             <h1>Agent 自动化评估体系</h1>
             <p class="subtitle">用历史复核案件回放 workflow，验证准确性、鲁棒性、可追溯性和人工边界。</p>
           </div>
@@ -2089,12 +2034,12 @@
         </div>`
       },
       {
-        number: "12",
+        number: "11",
         title: "MLOps 与生产可靠性",
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 12</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 11</span></div>
             <h1>MLOps 与生产可靠性</h1>
             <p class="subtitle">生产关注四件事：监控、降级、回滚、审计完整性。</p>
           </div>
@@ -2165,13 +2110,13 @@
         </div>`
       },
       {
-        number: "13",
+        number: "12",
         title: "模型运行方式",
         wide: true,
         html: `
         <div class="node-header">
           <div>
-            <div class="eyebrow"><span class="pulse"></span><span>步骤 13</span></div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 12</span></div>
             <h1>模型运行方式</h1>
             <p class="subtitle">模型可替换；工具、状态、证据和审计协议保持不变。</p>
           </div>
