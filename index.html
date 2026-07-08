@@ -505,6 +505,162 @@
       box-shadow: 0 0 18px rgba(255, 109, 109, 0.36);
     }
 
+    .langgraph-card {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .lg-map {
+      display: grid;
+      gap: 14px;
+    }
+
+    .lg-chain {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) auto minmax(0, 1.05fr) auto minmax(0, 1.18fr) auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .lg-chain.is-second {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.05fr) auto minmax(0, 0.92fr);
+      max-width: 78%;
+      margin-left: auto;
+    }
+
+    .lg-node {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.18);
+      border-radius: 8px;
+      background: rgba(19, 36, 31, 0.7);
+      padding: 11px;
+    }
+
+    .lg-node.is-start,
+    .lg-node.is-end {
+      display: grid;
+      place-items: center;
+      border-color: rgba(94, 232, 212, 0.34);
+      color: var(--cyan);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .lg-node.is-agent {
+      border-color: rgba(255, 201, 111, 0.42);
+      background: rgba(255, 201, 111, 0.08);
+    }
+
+    .lg-node.is-state {
+      border-color: rgba(168, 255, 182, 0.34);
+    }
+
+    .lg-node small {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .lg-node b {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .lg-node span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.38;
+      overflow-wrap: anywhere;
+    }
+
+    .lg-edge {
+      display: grid;
+      place-items: center;
+      min-width: 54px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .lg-edge::after {
+      content: "→";
+      display: block;
+      color: var(--green);
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .lg-route {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 2fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .lg-branches {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .lg-branch {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.16);
+      border-radius: 8px;
+      background: rgba(8, 17, 15, 0.42);
+      padding: 10px;
+    }
+
+    .lg-branch label {
+      display: inline-block;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: rgba(94, 232, 212, 0.1);
+      color: var(--cyan);
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .lg-legend {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .lg-legend-item {
+      min-width: 0;
+      border: 1px solid rgba(155, 179, 167, 0.16);
+      border-radius: 8px;
+      background: rgba(8, 17, 15, 0.42);
+      padding: 10px;
+    }
+
+    .lg-legend-item b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .lg-legend-item span {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.42;
+      overflow-wrap: anywhere;
+    }
+
     .planner-card {
       display: grid;
       gap: 16px;
@@ -1077,15 +1233,27 @@
 
       .gate-flow,
       .gate-checks,
+      .lg-chain,
+      .lg-chain.is-second,
+      .lg-route,
+      .lg-branches,
+      .lg-legend,
       .planner-flow,
       .planner-steps {
         grid-template-columns: 1fr;
+        max-width: none;
+        margin-left: 0;
       }
 
       .gate-arrow,
+      .lg-edge,
       .planner-arrow {
         min-height: 20px;
         transform: rotate(90deg);
+      }
+
+      .lg-edge::after {
+        margin-top: 4px;
       }
 
       .archive-card span {
@@ -1337,79 +1505,101 @@
           </div>
         </div>
 
-        <div class="node-body">
-          <section class="panel">
+        <div class="node-body is-single">
+          <section class="panel langgraph-card">
             <div class="panel-title">
-              <span>StateGraph nodes</span>
-              <span class="tag">Route / Tool / State</span>
+              <span>LangGraph workflow</span>
+              <span class="tag">Nodes + Edges + State</span>
             </div>
-            <div class="timeline">
-              <div class="step">
-                <span class="step-number">01</span>
-                <div>
-                  <b>Load context</b>
-                  <span>读取 alert、features、tools、observations 和 case state。</span>
+
+            <div class="lg-map">
+              <div class="lg-chain">
+                <div class="lg-node is-start">START</div>
+                <div class="lg-edge">edge</div>
+                <div class="lg-node">
+                  <small>Node: function</small>
+                  <b>Context Builder</b>
+                  <span>从 case_store 读取 alert、features、tools、observations。</span>
+                </div>
+                <div class="lg-edge">state</div>
+                <div class="lg-node is-agent">
+                  <small>Node: agent</small>
+                  <b>Evidence Router Agent</b>
+                  <span>决定下一张 evidence card 要证明什么，输出 tool_call。</span>
+                </div>
+                <div class="lg-edge">tool_call</div>
+                <div class="lg-node">
+                  <small>Node: function</small>
+                  <b>Guardrail Gate</b>
+                  <span>校验 schema、权限、window、depth、budget、human boundary。</span>
                 </div>
               </div>
-              <div class="step">
-                <span class="step-number">02</span>
-                <div>
-                  <b>Evidence Router</b>
-                  <span>决定下一张 evidence card 要证明什么，并生成 tool_call。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">03</span>
-                <div>
-                  <b>Guardrail gate</b>
-                  <span>schema、权限、范围、budget 和人工边界先校验。</span>
-                </div>
-              </div>
-              <div class="step">
-                <span class="step-number">04</span>
-                <div>
-                  <b>Execute controlled tool</b>
+
+              <div class="lg-chain is-second">
+                <div class="lg-node">
+                  <small>Node: function</small>
+                  <b>Tool Executor</b>
                   <span>Database / profile / graph / policy / Python 受控执行。</span>
                 </div>
-              </div>
-              <div class="step">
-                <span class="step-number">05</span>
-                <div>
-                  <b>Write evidence and state</b>
-                  <span>写入 observation、evidence card、tool trace 和 case_store。</span>
+                <div class="lg-edge">observation</div>
+                <div class="lg-node is-state">
+                  <small>Node: function</small>
+                  <b>Evidence Writer</b>
+                  <span>写 evidence card、tool_trace、query_ref、state update。</span>
+                </div>
+                <div class="lg-edge">state</div>
+                <div class="lg-node is-state">
+                  <small>Node: router</small>
+                  <b>Route(state)</b>
+                  <span>根据 evidence gap、blocked_reason、claim status 决定下一跳。</span>
                 </div>
               </div>
-              <div class="step">
-                <span class="step-number">06</span>
-                <div>
-                  <b>Continue / stop / human review</b>
-                  <span>证据足够进报告；不足继续查；高影响转人工。</span>
-                </div>
-              </div>
-            </div>
-          </section>
 
-          <section class="panel">
-            <div class="panel-title">
-              <span>Evidence routing node</span>
-              <span class="tag">What to prove next</span>
-            </div>
-            <div class="frictions">
-              <div class="friction">
-                <b>Feature trigger</b>
-                <span>金额、次数、阈值异常优先走 Database query。</span>
+              <div class="lg-route">
+                <div class="lg-node is-state">
+                  <small>Conditional edges</small>
+                  <b>Edges are state routing</b>
+                  <span>边不是数据库关系；边是 route(state) 的条件跳转。</span>
+                </div>
+                <div class="lg-branches">
+                  <div class="lg-branch">
+                    <label>edge: more_evidence</label>
+                    <div class="lg-node is-agent">
+                      <small>Loop back</small>
+                      <b>Evidence Router Agent</b>
+                      <span>继续选择下一条证据路径。</span>
+                    </div>
+                  </div>
+                  <div class="lg-branch">
+                    <label>edge: ready_for_report</label>
+                    <div class="lg-node is-agent">
+                      <small>Terminal agent</small>
+                      <b>Report Agent</b>
+                      <span>只读 case_store，生成可复核报告。</span>
+                    </div>
+                  </div>
+                  <div class="lg-branch">
+                    <label>edge: blocked / review</label>
+                    <div class="lg-node is-end">
+                      HUMAN REVIEW
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="friction">
-                <b>Counterparty clue</b>
-                <span>新对手方、共享设备、二跳资金流再扩图。</span>
-              </div>
-              <div class="friction">
-                <b>Profile / policy gap</b>
-                <span>KYC、baseline、AML 条款不足时补 profile / policy。</span>
-              </div>
-              <div class="friction">
-                <b>Weak or conflicting evidence</b>
-                <span>写 missing-evidence 或转 human review，不继续瞎查。</span>
+
+              <div class="lg-legend">
+                <div class="lg-legend-item">
+                  <b>Node</b>
+                  <span>一个会读写 State 的 Agent 或函数，例如 Evidence Router、Guardrail Gate、Evidence Writer。</span>
+                </div>
+                <div class="lg-legend-item">
+                  <b>Edge</b>
+                  <span>一个条件路由，例如 allowed、blocked、more_evidence、ready_for_report。</span>
+                </div>
+                <div class="lg-legend-item">
+                  <b>State</b>
+                  <span>case_id、tool_call、observations、evidence cards、claim status、missing gaps。</span>
+                </div>
               </div>
             </div>
           </section>
