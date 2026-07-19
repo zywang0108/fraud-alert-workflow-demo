@@ -1,8 +1,3 @@
-const NOT_FOUND = new Response("Not Found", {
-  status: 404,
-  headers: { "content-type": "text/plain; charset=utf-8" },
-});
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -20,6 +15,10 @@ export default {
     }
 
     const response = await env.ASSETS.fetch(request);
-    return response.status === 404 ? NOT_FOUND : response;
+    if (response.status !== 404) return response;
+    return new Response("Not Found", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
   },
 };
