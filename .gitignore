@@ -1,6 +1,5 @@
 .DS_Store
-*.log
-*.out
-check-*.png
-block*-fit.png
+.workbuddy/
 node_modules/
+dist/
+.sites/

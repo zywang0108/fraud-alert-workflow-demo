@@ -1,0 +1,65 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 04</span></div>
+          <h1>Context Layer / Case Memory</h1>
+          <p class="subtitle">把告警、工具返回和 Case State 压成每轮最小 Context，避免凭记忆或全量明细判断。</p>
+        </div>
+      </div>
+
+      <div class="node-body is-single">
+        <section class="panel planner-card">
+          <div class="panel-title">
+            <span>Context 包</span>
+            <span class="tag">输入与控制</span>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="step-number">01</span>
+              <div>
+                  <b>告警包</b>
+                  <span>alert_id、account_id、risk_type、features、时间窗口。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">02</span>
+              <div>
+                  <b>可用 Tool</b>
+                <span>只注入本案允许的 Tool schema。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">03</span>
+              <div>
+                  <b>历史观察结果</b>
+                <span>摘要、Evidence 引用、query_hash、tool_call_id、缺口。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">04</span>
+              <div>
+                <b>Case State</b>
+                <span>Claim 状态与下一步证据缺口。</span>
+              </div>
+            </div>
+          </div>
+          <div class="planner-steps">
+            <div class="planner-step">
+              <b>防止重复查证</b>
+              <span>已核验、已查询、空结果都进入 Context。</span>
+            </div>
+            <div class="planner-step">
+              <b>控制 Agent 可见数据范围</b>
+              <span>只注入告警摘要、聚合结果、必要样例行和 query reference；完整客户明细保留在受限 Database / Case Store 中。</span>
+            </div>
+            <div class="planner-step">
+              <b>减少上下文漂移</b>
+              <span>每轮从 Case Store 重建，不靠长对话记忆。</span>
+            </div>
+            <div class="planner-step">
+              <b>保证报告可追溯</b>
+              <span>报告只能引用 Context 中已有证据或缺证标记。</span>
+            </div>
+          </div>
+        </section>
+      </div>
+

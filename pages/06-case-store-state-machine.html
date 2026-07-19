@@ -1,0 +1,53 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 06</span></div>
+          <h1>State / Case Store 状态机</h1>
+          <p class="subtitle">每次工具结果都写回 Case Store；下一轮从状态机恢复，不靠对话记忆。</p>
+        </div>
+      </div>
+
+      <div class="node-body is-single">
+        <section class="panel planner-card state-card">
+          <div class="panel-title">
+            <span>持久化 State 机</span>
+            <span class="tag">案件 + Evidence + 恢复</span>
+          </div>
+
+          <div class="planner-flow state-flow">
+            <div class="planner-node is-input">
+              <small>Tool 执行后</small>
+              <b>写入案件事件</b>
+              <span>Observation、Evidence、Trace、query reference、blocked_reason。</span>
+            </div>
+            <div class="planner-arrow">→</div>
+            <div class="planner-node is-plan">
+              <small>Case Store 状态</small>
+              <b>更新调查进度</b>
+              <div class="planner-steps">
+                <div class="planner-step">
+                  <b>案件 State</b>
+                  <span>pending / investigating / missing / review / ready / closed。</span>
+                </div>
+                <div class="planner-step">
+                  <b>循环记忆</b>
+                  <span>记录已跑 Query、空结果和证据冲突。</span>
+                </div>
+                <div class="planner-step">
+                  <b>回放记录</b>
+                  <span>State transition + hashes，支持恢复和回放。</span>
+                </div>
+              </div>
+            </div>
+            <div class="planner-arrow">→</div>
+            <div class="planner-node is-output">
+              <small>下一跳路由</small>
+              <b>继续 / 停止 / 复核</b>
+              <div class="planner-result">
+                <div class="planner-result-line"><i></i><span>关键证据已核验：进入报告生成。</span></div>
+                <div class="planner-result-line is-review"><i></i><span>不足、冲突或越权：继续补证或转人工。</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+

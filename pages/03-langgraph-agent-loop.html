@@ -1,0 +1,88 @@
+<div class="node-header is-workflow">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span><span>步骤 03</span></div>
+            <h1>LangGraph-style Agent Loop</h1>
+            <p class="subtitle">一个告警进入 StateGraph；证据不足继续取证，执行失败进入重试，证据齐全进入报告复核。</p>
+          </div>
+        </div>
+
+      <div class="node-body is-single is-workflow">
+        <section class="panel langgraph-card">
+          <div class="panel-title">
+            <span>StateGraph 工作流</span>
+            <span class="tag">节点 + 条件路由</span>
+          </div>
+
+          <div class="lg-map">
+            <div class="lg-chain">
+              <div class="lg-node is-start">START</div>
+              <div class="lg-edge">边</div>
+              <div class="lg-node">
+                <small>函数节点</small>
+                <b>Context 构建器</b>
+                <span>告警、特征、Tool schema。</span>
+              </div>
+              <div class="lg-edge">State</div>
+              <div class="lg-node is-agent">
+                <small>Agent 节点</small>
+                <b>Evidence Router Agent</b>
+                <span>选择证据路径并输出 tool_call。</span>
+              </div>
+              <div class="lg-edge">tool_call</div>
+              <div class="lg-node">
+                <small>函数节点</small>
+                <b>Guardrail 校验门</b>
+                <span>校验 schema、权限、时间窗、图深度、预算。</span>
+              </div>
+            </div>
+
+            <div class="lg-chain is-second">
+              <div class="lg-node">
+                <small>函数节点</small>
+                <b>Tool 执行器</b>
+                <span>Database 查询 / Graph 搜索 / Policy 检索 / Python 计算。</span>
+              </div>
+              <div class="lg-edge">Observation</div>
+              <div class="lg-node is-state">
+                <small>函数节点</small>
+                <b>Evidence 写入器</b>
+                <span>工具结果 → Evidence card。</span>
+              </div>
+              <div class="lg-edge">State</div>
+              <div class="lg-node is-state">
+                <small>路由节点</small>
+                <b>Route(state)</b>
+                <span>按缺证、拦截、证据齐全分流。</span>
+              </div>
+            </div>
+
+            <div class="lg-route-stack">
+              <div class="lg-route-heading">
+                <b>Route(state) 条件边</b>
+                <span>每一条边都决定下一跳</span>
+              </div>
+              <div class="lg-route-grid">
+                <div class="lg-route-row is-loop">
+                  <label>more_evidence</label>
+                  <i>↺</i>
+                  <b>Evidence Router Agent</b>
+                  <span>证据缺口存在</span>
+                </div>
+                <div class="lg-route-row is-retry">
+                  <label>retry_or_repair</label>
+                  <i>↺</i>
+                  <b>修复 → Router</b>
+                  <span>Guardrail 未通过 / Tool 错误</span>
+                </div>
+                <div class="lg-route-row is-report">
+                  <label>ready_for_report</label>
+                  <i>→</i>
+                  <b>Report Agent → 人工复核</b>
+                  <span>证据齐全</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+

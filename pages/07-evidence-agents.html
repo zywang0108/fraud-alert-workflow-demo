@@ -1,0 +1,118 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 07</span></div>
+          <h1>Evidence Agents（取证子 Agent）</h1>
+          <p class="subtitle">子 Agent 核验触发特征，统一输出 Evidence card、query reference 和 tool trace。</p>
+        </div>
+      </div>
+
+      <div class="evidence-board">
+        <section class="panel">
+          <div class="panel-title">
+            <span>Top N 特征并行取证</span>
+            <span class="tag">3 个子 Agent</span>
+          </div>
+          <div class="agent-grid">
+            <article class="agent-tile">
+              <div class="agent-head"><span>子 Agent 1</span><span>金额</span></div>
+              <div class="agent-title">过去 12 小时交易额</div>
+              <p class="agent-claim">特征 1: past_12h_amount_gt_50000</p>
+              <div class="agent-copy">核验 12 小时交易额与明细。</div>
+              <div class="agent-return">
+                <span>返回</span>
+                <b>total_amount</b>
+                <b>样例行</b>
+                <b>Query 引用</b>
+              </div>
+              <div class="result-line">68,420 元，超过 50,000。</div>
+            </article>
+
+            <article class="agent-tile">
+              <div class="agent-head"><span>子 Agent 2</span><span>次数</span></div>
+              <div class="agent-title">过去 12 小时交易次数</div>
+              <p class="agent-claim">特征 2: past_12h_count_gt_12</p>
+              <div class="agent-copy">核验 12 小时交易次数与渠道。</div>
+              <div class="agent-return">
+                <span>返回</span>
+                <b>transaction_count</b>
+                <b>时间窗口</b>
+                <b>Query 引用</b>
+              </div>
+              <div class="result-line">14 笔，超过阈值 12。</div>
+            </article>
+
+            <article class="agent-tile">
+              <div class="agent-head"><span>子 Agent 3</span><span>阈值</span></div>
+              <div class="agent-title">当前金额与历史阈值</div>
+              <p class="agent-claim">特征 3: current_amount_gt_3x_baseline</p>
+              <div class="agent-copy">复算历史阈值与当前倍数。</div>
+              <div class="agent-return">
+                <span>返回</span>
+                <b>baseline</b>
+                <b>ratio</b>
+                <b>计算方法</b>
+              </div>
+              <div class="result-line">当前值为历史阈值 3.4 倍。</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Evidence card 结构</span>
+            <span class="tag">统一 schema</span>
+          </div>
+          <div class="schema-list">
+            <div class="schema-row">
+              <b>feature_id, claim, status</b>
+              <span>feature_id、claim、核验状态 verified/missing/conflict。</span>
+              <div class="schema-pills"><span class="schema-pill">feature_id</span><span class="schema-pill">status</span></div>
+            </div>
+            <div class="schema-row">
+              <b>summary, details</b>
+              <span>窗口、聚合值、阈值、交易次数。</span>
+              <div class="schema-pills"><span class="schema-pill">window</span><span class="schema-pill">value</span><span class="schema-pill">threshold</span></div>
+            </div>
+            <div class="schema-row">
+              <b>样例行与血缘</b>
+              <span>样例行、tables、columns、query_file、query_hash。</span>
+              <div class="schema-pills"><span class="schema-pill">rows_sample</span><span class="schema-pill">query_hash</span></div>
+            </div>
+            <div class="schema-row">
+              <b>tool_trace_ref</b>
+              <span>tool_call_id、tool_name、hashes、duration、status。</span>
+              <div class="schema-pills"><span class="schema-pill">tool_call_id</span><span class="schema-pill">hashes</span></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="evidence-storage">
+        <div class="artifact-card">
+          <b>Postgres JSONB</b>
+          <div class="audit-lines">
+            <div class="audit-line"><i></i><span>case_id, alert_id, account_id</span></div>
+            <div class="audit-line"><i></i><span>status, evidence_uri, version</span></div>
+            <div class="audit-line"><i></i><span>query_ref, tool_trace_id</span></div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <b>S3 / MinIO 对象存储</b>
+          <pre class="storage-tree">s3://fraud-case-store/alert_12345/
+manifest.json
+evidence/feature_01.json
+evidence/feature_02.json
+evidence/feature_03.json
+queries/*.sql
+audit/tool_calls.jsonl</pre>
+        </div>
+        <div class="artifact-card">
+          <b>只追加审计日志</b>
+          <div class="audit-lines">
+            <div class="audit-line"><i></i><span>tool_calls.jsonl</span></div>
+            <div class="audit-line"><i></i><span>query_hash, duration_ms, status</span></div>
+            <div class="audit-line"><i></i><span>input_hash, output_hash, retry_count</span></div>
+          </div>
+        </div>
+      </div>
+
