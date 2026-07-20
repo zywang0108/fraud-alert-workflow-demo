@@ -2,6 +2,8 @@
 
 Static site for a bank fraud alert audit workflow. The page walks through the current manual audit flow, ML alert generation, Evidence Agents, report generation, SFT/RLVR/RLHF feedback, evaluation, MLOps, and model runtime options.
 
+Live demo: https://zywang0108.github.io/fraud-alert-workflow-demo/
+
 ## Preview locally
 
 ```bash
