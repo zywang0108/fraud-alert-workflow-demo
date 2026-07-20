@@ -1,0 +1,65 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 12</span></div>
+          <h1>模型运行方式</h1>
+          <p class="subtitle">模型可替换；工具、状态、证据和审计协议保持不变。</p>
+        </div>
+      </div>
+
+      <div class="node-body is-single">
+        <section class="panel planner-card">
+          <div class="panel-title">
+            <span>运行时抽象</span>
+            <span class="tag">API / GPU / CPU</span>
+          </div>
+          <div class="planner-steps">
+            <div class="planner-step">
+              <b>API 模式</b>
+              <span>复杂报告、解释和 Policy 推理。</span>
+            </div>
+            <div class="planner-step">
+              <b>自有 GPU 集群模式</b>
+              <span>Qwen / DeepSeek 通过兼容接口接入运行框架。</span>
+            </div>
+            <div class="planner-step">
+              <b>CPU 机器模式</b>
+              <span>轻量模型承担低并发、批处理和夜间回放。</span>
+            </div>
+            <div class="planner-step">
+              <b>统一审计边界</b>
+              <span>Prompt、Model、tool_call、hashes 全部进入审计日志。</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="step-number">01</span>
+              <div>
+                <b>runtime_policy 选择后端</b>
+                <span>按任务、敏感度、成本、延迟和合规选择后端。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">02</span>
+              <div>
+                <b>工具与状态不随模型变化</b>
+                <span>工具、Case Store、Evidence card、Guardrails 不变。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">03</span>
+              <div>
+                <b>复杂推理可降级</b>
+                <span>模型不可用时降级为模板、规则、只读查询或人工。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">04</span>
+              <div>
+                <b>架构价值</b>
+                <span>业务能力不绑定模型供应商或硬件形态。</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+

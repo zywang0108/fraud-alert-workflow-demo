@@ -1,0 +1,72 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 11</span></div>
+          <h1>MLOps 与生产可靠性</h1>
+          <p class="subtitle">生产关注四件事：监控、降级、回滚、审计完整性。</p>
+        </div>
+      </div>
+
+      <div class="node-body is-single">
+        <section class="panel planner-card">
+          <div class="panel-title">
+            <span>生产可靠性</span>
+            <span class="tag">监控 + 降级 + 回滚</span>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="step-number">01</span>
+              <div>
+                <b>数据质量监控</b>
+                <span>延迟、缺失率、schema、特征新鲜度、data/feature drift。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">02</span>
+              <div>
+                <b>模型健康监控</b>
+                <span>score 分布、risk_type、阈值命中率、标签回流。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">03</span>
+              <div>
+                <b>每周模型重训</b>
+                <span>延迟标签 + 人审结果 + 数据快照，过评估再发布。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">04</span>
+              <div>
+                <b>Agent 运行监控</b>
+                <span>Tool 成功率、SQL 超时、queue、p95、cost、退回率。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">05</span>
+              <div>
+                <b>审计日志监控</b>
+                <span>Trace、query_hash、Model/Prompt/Evidence version 完整。</span>
+              </div>
+            </div>
+          </div>
+          <div class="planner-steps">
+            <div class="planner-step">
+              <b>降级路径</b>
+              <span>异常时回退到规则、人工队列、稳定模型或只读查询。</span>
+            </div>
+            <div class="planner-step">
+              <b>版本回滚</b>
+              <span>记录模型、Prompt、工具、数据快照，灰度失败即回滚。</span>
+            </div>
+            <div class="planner-step">
+              <b>数据库灾备</b>
+              <span>交易库、Case Store、对象存储备份与恢复演练。</span>
+            </div>
+            <div class="planner-step">
+              <b>上线策略</b>
+              <span>影子运行 → 小流量灰度 → 扩大覆盖。</span>
+            </div>
+          </div>
+        </section>
+      </div>
+

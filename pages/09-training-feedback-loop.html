@@ -1,0 +1,115 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 09</span></div>
+          <h1>SFT / RLVR / RLHF 反馈闭环</h1>
+          <p class="subtitle">训练闭环分别优化 Agent Loop 的取证路由、Guardrails/Evidence/State 的可验证正确性，以及调查员认可的报告判断。</p>
+        </div>
+      </div>
+
+      <div class="node-body is-three">
+        <section class="panel">
+          <div class="panel-title">
+            <span>SFT → Agent Loop 路由</span>
+            <span class="tag">行为模仿</span>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="step-number">01</span>
+              <div>
+                <b>下一步动作策略</b>
+                <span>从 Context 学下一步：查库、扩图、取 Policy/Profile、跑 Python、停止或转人工。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">02</span>
+              <div>
+                <b>参数填充</b>
+                <span>学习 account_id、window、feature_id、query_template_id、threshold、depth、row_limit。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">03</span>
+              <div>
+                <b>停止 / 缺证信号</b>
+                <span>学习何时继续补证、何时输出缺证声明、何时进入 ready_for_report。</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>RLVR → Guardrails / Evidence / State</span>
+            <span class="tag">可验证奖励</span>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="step-number">01</span>
+              <div>
+                <b>Guardrail 通过</b>
+                <span>奖励合法 schema、权限范围、query_template、预算和人工边界。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">02</span>
+              <div>
+                <b>Evidence 正确性</b>
+                <span>奖励 Query 可执行、计算可复算、Evidence card 可追溯。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">03</span>
+              <div>
+                <b>State 转移</b>
+                <span>奖励正确更新 Claim 状态、避免重复 Query、保留回放记录。</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>RLHF → 人审判断</span>
+            <span class="tag">专家偏好</span>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="step-number">01</span>
+              <div>
+                <b>报告可用性</b>
+                <span>学习更清楚、更短、更适合调查员复核的报告结构。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">02</span>
+              <div>
+                <b>风险措辞</b>
+                <span>学习“高度可疑 / 需进一步核验 / 证据不足”的措辞边界。</span>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">03</span>
+              <div>
+                <b>升级偏好</b>
+                <span>学习何时建议升级、何时保留人工复核，不能替代最终处置。</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="note-strip">
+        <div class="note">
+          <b>SFT</b>
+          <span>优化路由节点：Tool 选择、arguments、停止/缺证。</span>
+        </div>
+        <div class="note">
+          <b>RLVR</b>
+          <span>优化可验证行为：Guardrail 通过、Evidence 正确性、State 转移。</span>
+        </div>
+        <div class="note">
+          <b>RLHF</b>
+          <span>优化人审体验：报告可读性、风险措辞、升级偏好。</span>
+        </div>
+      </div>
+

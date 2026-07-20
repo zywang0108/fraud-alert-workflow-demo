@@ -1,0 +1,47 @@
+<div class="node-header">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span><span>步骤 05</span></div>
+          <h1>Guardrails / 权限边界</h1>
+          <p class="subtitle">所有 tool_call 先过受限数据库、工具白名单、数据范围、成本和人工边界校验。</p>
+        </div>
+      </div>
+
+      <div class="node-body is-single">
+        <section class="panel guardrail-gate">
+          <div class="panel-title">
+            <span>Tool 调用校验门</span>
+            <span class="tag">执行前校验</span>
+          </div>
+
+          <div class="gate-flow">
+            <div class="gate-node is-input">
+              <small>Agent 输出</small>
+              <b>tool_call 请求</b>
+              <span>tool_name、arguments、case_id、account_id、window、reason。</span>
+            </div>
+            <div class="gate-arrow">→</div>
+            <div class="gate-node is-decision">
+              <small>Guardrail 校验</small>
+              <b>执行前验证</b>
+              <div class="gate-checks">
+                <div class="gate-check"><b>受限 Database</b><span>只允许访问受限视图、字段和 query_template。</span></div>
+                <div class="gate-check"><b>Tool 白名单</b><span>只允许调用当前案件注入的 tool_name。</span></div>
+                <div class="gate-check"><b>权限</b><span>校验 role、tenant、case、risk_type。</span></div>
+                <div class="gate-check"><b>数据范围</b><span>限制账户、时间窗、row_limit、depth。</span></div>
+                <div class="gate-check"><b>执行预算</b><span>限制 timeout、retry 和 token cost。</span></div>
+                <div class="gate-check"><b>人工边界</b><span>冻结、关闭、申报必须人工确认。</span></div>
+              </div>
+            </div>
+            <div class="gate-arrow">→</div>
+            <div class="gate-node is-output">
+              <small>运行框架动作</small>
+              <b>允许或拦截</b>
+              <div class="gate-result">
+                <div class="gate-result-line"><i></i><span>通过：执行工具，写 Observation、Trace、Evidence。</span></div>
+                <div class="gate-result-line is-blocked"><i></i><span>拒绝：返回 blocked_reason，补证据或转人工。</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
